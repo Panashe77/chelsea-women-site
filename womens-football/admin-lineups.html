@@ -1,0 +1,55 @@
+
+http://localhost:8000/admin-lineups.html
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex, nofollow">
+		<title>Admin: Lineups — CFCW South</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+
+		<main>
+			<article class="dataPage">
+				<h1 class="articleTitle">Admin: Add Lineup</h1>
+
+				<label class="commentLabel">
+					Fixture
+					<select id="fixture-select"></select>
+				</label>
+
+				<form id="lineup-form">
+					<h2 class="lineup-team" id="home-team-label" style="margin-top:1.5rem;">Home team</h2>
+					<label class="commentLabel">
+						Starting XI — one per line, "number, name" (e.g. "7, Sam Kerr")
+						<textarea name="home_starters" rows="12" placeholder="1, Hannah Hampton&#10;4, Nathalie Bjorn&#10;7, Sam Kerr"></textarea>
+					</label>
+					<label class="commentLabel">
+						Subs — same format
+						<textarea name="home_subs" rows="6"></textarea>
+					</label>
+
+					<h2 class="lineup-team" id="away-team-label" style="margin-top:1.5rem;">Away team</h2>
+					<label class="commentLabel">
+						Starting XI
+						<textarea name="away_starters" rows="12"></textarea>
+					</label>
+					<label class="commentLabel">
+						Subs
+						<textarea name="away_subs" rows="6"></textarea>
+					</label>
+
+					<button type="submit" class="commentButton">Save lineups</button>
+					<p id="admin-status" class="commentStatus"></p>
+				</form>
+			</article>
+		</main>
+
+		<script type="module" src="admin-lineups.js"></script>
+	</body>
+</html>

@@ -1,0 +1,53 @@
+
+//http://localhost:8000/admin-goals.html
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex, nofollow">
+		<title>Admin: Goals — CFCW South</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+
+		<main>
+			<article class="dataPage">
+				<h1 class="articleTitle">Admin: Add Goals</h1>
+
+				<label class="commentLabel">
+					Fixture
+					<select id="fixture-select"></select>
+				</label>
+
+				<form id="goals-form">
+					<h2 class="lineup-team" id="home-team-label" style="margin-top:1.5rem;">Home team</h2>
+					<label class="commentLabel">
+						Goals — one per line: "minute, name" or "minute, name, og" for an own goal
+						<textarea name="home_goals" rows="6" placeholder="23, Kerr&#10;67, Kerr&#10;80, Reiten"></textarea>
+					</label>
+
+					<h2 class="lineup-team" id="away-team-label" style="margin-top:1.5rem;">Away team</h2>
+					<label class="commentLabel">
+						Goals
+						<textarea name="away_goals" rows="6" placeholder="45, Buchanan, og"></textarea>
+					</label>
+
+					<button type="submit" class="commentButton">Save goals</button>
+					<p id="admin-status" class="commentStatus"></p>
+				</form>
+
+				<p style="margin-top:2rem; font-size:.875rem; color:#8c8c8c;">
+					Don't forget to also update <code>home_score</code>, <code>away_score</code> and
+					set <code>status</code> to "finished" on the fixture itself in Supabase —
+					goals show up here, but the scoreline at the top comes from those fields.
+				</p>
+			</article>
+		</main>
+
+		<script type="module" src="admin-goals.js"></script>
+	</body>
+</html>

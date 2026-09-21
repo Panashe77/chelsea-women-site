@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Women's football news, analysis, fixtures and tables">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Article — CFCW South</title>
+
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+
+		<header>
+			<nav>
+				<ul>
+					<li class="logoSpace bigItem"><a href="index.html" class="siteName">CFCW South</a></li>
+					<li><a href="index.html" class="home">Home</a></li>
+					<li><a href="articles.html" class="news">Articles</a></li>
+					<li><a href="fixtures.html" class="fixtures">Fixtures</a></li>
+					<li><a href="table.html" class="table">Table</a></li>
+					<li class="outsideItem"><input type="search" id="searchOption" name="q" placeholder="Search"></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main>
+			<article class="articlePage">
+
+				<section class="articleHeader">
+					<h1 class="articleTitle" id="article-title">Loading…</h1>
+					<p class="standfirst" id="article-standfirst"></p>
+					<p class="byline" id="article-byline"></p>
+				</section>
+
+				<img id="article-image" class="articleImage" src="" alt="" style="display:none;">
+
+				<section class="articleBody" id="article-body"></section>
+
+				<!-- ========== COMMENTS ========== -->
+				<section class="comments">
+					<h2 class="commentsHeading">Comments</h2>
+
+					<div id="comments-list">
+						<p class="commentsLoading">Loading comments…</p>
+					</div>
+
+					<form id="comment-form" class="commentForm">
+						<label class="commentLabel">
+							Name
+							<input type="text" name="author_name" required maxlength="60">
+						</label>
+
+						<label class="commentLabel">
+							Comment
+							<textarea name="body" required maxlength="1000" rows="5"></textarea>
+						</label>
+
+						<!-- Honeypot: hidden from people, bots often fill it in -->
+						<label class="honeypot" aria-hidden="true">
+							Website
+							<input type="text" name="website" tabindex="-1" autocomplete="off">
+						</label>
+
+						<button type="submit" class="commentButton">Post comment</button>
+						<p id="comment-status" class="commentStatus"></p>
+					</form>
+				</section>
+
+			</article>
+		</main>
+
+		<footer class="siteFooter">
+			<p>CFCW South &middot; Built with HTML, CSS and Supabase</p>
+		</footer>
+
+		<script type="module" src="article-loader.js"></script>
+	</body>
+</html>

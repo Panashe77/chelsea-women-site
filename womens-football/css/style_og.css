@@ -1,0 +1,322 @@
+/*
+  ========================================
+  Style Reset START
+  ========================================
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/*
+  ========================================
+  Style Reset END
+  ========================================
+
+  ========================================
+  START CSS CODING . . . BEGIN!
+  ========================================
+
+  ========================================
+  GRID
+  ========================================
+*/
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+/*
+  ========================================
+  BASE (Colors, Fonts, Backgrounds)
+  ========================================
+*/
+body{
+  font-size: 62.5%;
+  background: white;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  color: #4a4a4a;
+}
+
+header{
+  background: black;
+}
+.media{
+  line-height: 1.2rem;
+}
+
+header, article, li{
+  margin: 0 auto;
+}
+
+h1, .title h2{
+  font-size:1.375rem;
+  font-weight: bold;
+  color: #4a4a4a;
+}
+
+.title span:last-child{
+  color: #8c8c8c;
+  font-size:1.375rem;
+}
+
+.welcome{
+  color: white;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.welcome h2{
+  padding: 17.5rem 1rem 1rem 1rem;
+}
+
+.welcome h3{
+  font-size: 1.125rem;
+  padding: 7.5rem 1rem 0rem 1rem;
+}
+
+.welcome span, .welcome p{
+  padding: 0 1rem;
+}
+
+.welcome span, .news span{
+  font-size: 1rem;
+  font-variant: all-small-caps;
+}
+.welcome span, .welcome p, p  {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #bfbebe;
+}
+
+.news h3{
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 1rem 0;
+}
+
+.news p{
+  padding-bottom: 1rem;
+}
+
+.news, .news p{
+  color: #4a4a4a;
+}
+
+
+  /*
+  ========================================
+  LAYOUT (Sizing and Layout of Main Elements)
+  ========================================
+*/
+header{
+  height: 50px;
+  width: 100%;
+  clear: both;
+  line-height: 1;
+  padding: 0 15%;
+}
+
+li{
+  display: inline-block;
+  padding: 1.2% 1.4% .8% 1.4%;
+  min-height: 50px;
+  max-height: 50px;
+}
+
+article{
+  height: 500px;
+  width: 100%;
+  padding: 0 15%;
+}
+
+.title{
+  min-height: 75px;
+  max-height: 75px;
+  padding-right: 1%;
+  width: auto;
+}
+
+.title h1, .title h2{
+  float: left;
+  position: relative;
+  padding-top: 40px;
+}
+
+.title span{
+  float: right;
+  position: relative;
+  padding-top: 40px;
+}
+
+.mainSection, .quarterSection{
+  height: 400px;
+  width: 25%;
+  float: left;
+}
+
+.mainSection + .quarterSection{
+    padding: 0 1%;
+}
+
+.quarterSection + .quarterSection{
+  padding-right: 1%;
+}
+
+.quarterSection .babySection:first-child{
+  border-bottom: 4px solid white;
+}
+
+.mainSection{
+  height: 400px;
+  width: 50%;
+}
+
+.babySection{
+  height: 200px;
+  float: none;
+}
+
+.oneThird{
+  width: 33.33%;
+  height: 85%;
+  float: left;
+  padding-right: 1%;
+}
+
+.oneThird img{
+  height: 60%;
+  width: 100%;
+}
+
+/*
+  ========================================
+  MODULE (specific styles targeting individual parts of the page, such as navigation or feature styles)
+  ========================================
+*/
+li{
+  float: left;
+  background: black;
+  color: white;
+  border-right: .25px solid white;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+li:last-child{
+  border: none;
+}
+
+.signIn{
+  text-align: center;
+}
+
+.logo, .accountImg{
+  height: 1.5rem;
+  padding-bottom: 2%;
+  float: left;
+}
+
+
+.bigItem{
+  width: 10rem;
+}
+
+.mainSection{
+  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.files.bbci.co.uk%2F1676D%2Fproduction%2F_113931029_composite.jpg&f=1&nofb=1");
+}
+
+.one{
+  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fichef.bbci.co.uk%2Fnews%2F1024%2Fbranded_news%2FD39B%2Fproduction%2F_113917145_gettyimages-144092698.jpg&f=1&nofb=1");
+}
+
+.two{
+  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fychef.files.bbci.co.uk%2F1600x900%2Fp08ngz84.jpg&f=1&nofb=1");
+}
+
+.three{
+  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fantiguaobserver.com%2Fwp-content%2Fuploads%2F2020%2F04%2FVaccine-coronavirus.jpg&f=1&nofb=1");
+}
+
+.four{
+  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-WNYSYAt60tE%2FV3IlgIeY2AI%2FAAAAAAABDTI%2FuhrOWbrnqDgDP58MQs5RhexgBUitYx22gCLcB%2Fs1600%2Fvictor%252Bjara.jpg&f=1&nofb=1");
+}
+
+.mainSection, .babySection, .three{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+
+/*
+  ========================================
+  STATE (styles are then used to augment or override other styles in the event that a module includes an alternate state)
+  ========================================
+*/
+a:link, a:visited{
+  text-decoration: none;
+  color: inherit;
+}
+/*
+  ========================================
+  THEME (could include styles based around the skin, or look and feel, of different modules)
+  ========================================
+*/
+
+span:before{
+  content: '|';
+  color: red;
+  font-size: 1.5rem;
+  padding-right: .25rem;
+}
+
+.title span:before{
+  content: none;
+}
+
+/*throwing shade on this shade hrng >:( */
+.shade{
+  box-shadow: inset 0 -184px 244px -184px rgba(0,0,0,1);
+}
+.shade:first-child{
+  box-shadow: inset 0 -368px 488px -368px rgba(0,0,0,1);
+}
