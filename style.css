@@ -626,18 +626,8 @@ span:before{
 .fixture-row{
   display: flex;
   align-items: center;
-  padding: .85rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 0;
   font-size: 1rem;
-}
-
-.fixture-score-home,
-.fixture-score-away{
-  flex: 0 0 2rem;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #034694;
 }
 
 .fixture-home{
@@ -655,10 +645,11 @@ span:before{
 }
 
 .fixture-middle{
-  flex: 0 0 6rem;
+  flex: 0 0 6.5rem;
   text-align: center;
-  font-size: .875rem;
-  color: #4a4a4a;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #034694;
 }
 
 #league-table table{
@@ -800,56 +791,32 @@ span:before{
   /* Fixtures: stack each team on its own line instead of squeezing
      five columns into a narrow width */
   .fixture-row{
-    flex-wrap: wrap;
-    row-gap: .3rem;
-    padding: .9rem 0 .5rem 0;
+    padding: .9rem 0;
+    font-size: .9375rem;
+  }
+
+  .fixture-home,
+  .fixture-away{
+    display: flex;
+    align-items: center;
+    gap: .35rem;
   }
 
   .fixture-home{
-    order: 1;
-    flex: 1 1 auto;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: .4rem;
+    justify-content: flex-end;
   }
 
   .fixture-home .teamBadge{
-    order: -1;
-    margin: 0;
-  }
-
-  .fixture-score-home{
-    order: 2;
-    flex: 0 0 2.2rem;
-    text-align: right;
-  }
-
-  .fixture-away{
-    order: 3;
-    flex: 1 1 auto;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-  }
-
-  .fixture-score-away{
-    order: 4;
-    flex: 0 0 2.2rem;
-    text-align: right;
+    order: 1;
   }
 
   .fixture-middle{
-    order: 5;
-    flex: 0 0 100%;
-    text-align: left;
-    font-size: .8125rem;
-    margin-top: .2rem;
+    flex: 0 0 4.5rem;
+    font-size: .875rem;
   }
 
-  /* Managers and lineups: give a bit more breathing room and let the
-     two team columns stack instead of squeezing side by side */
+  /* Managers and lineups: let the two team columns stack instead of
+     squeezing side by side in a narrow width */
   .fixture-managers{
     flex-direction: column;
     gap: .2rem;
@@ -922,7 +889,6 @@ span:before{
 
 .fixture-lineups-toggle{
   padding: 0 0 1rem 0;
-  border-bottom: 1px solid #e0e0e0;
   margin-bottom: .5rem;
 }
 
