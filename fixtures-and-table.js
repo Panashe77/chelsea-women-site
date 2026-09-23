@@ -68,9 +68,7 @@ async function loadFixtures() {
   container.innerHTML = fixtures.map(f => {
     const date = new Date(f.kickoff_time).toLocaleString();
     const isFinished = f.status === 'finished';
-    const homeScore = isFinished ? f.home_score : '';
-    const awayScore = isFinished ? f.away_score : '';
-    const middle = isFinished ? 'FT' : date;
+    const middle = isFinished ? `${f.home_score} – ${f.away_score}` : date;
 
     const fixtureLineups = lineupsByFixture[f.id] || {};
     const homeLineup = fixtureLineups[f.home_team.id] || [];
@@ -86,7 +84,6 @@ async function loadFixtures() {
 
     return `
       <div class="fixture-row">
-        <span class="fixture-score-home">${homeScore}</span>
         <span class="fixture-home">
           ${f.home_team.name}
           ${badge(f.home_team.logo_url, f.home_team.name)}
@@ -96,7 +93,6 @@ async function loadFixtures() {
           ${badge(f.away_team.logo_url, f.away_team.name)}
           ${f.away_team.name}
         </span>
-        <span class="fixture-score-away">${awayScore}</span>
       </div>
       ${hasGoals ? `
         <div class="fixture-goals">
