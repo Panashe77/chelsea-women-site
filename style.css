@@ -796,6 +796,69 @@ span:before{
   .articleGrid{
     grid-template-columns: 1fr;
   }
+
+  /* Fixtures: stack each team on its own line instead of squeezing
+     five columns into a narrow width */
+  .fixture-row{
+    flex-wrap: wrap;
+    row-gap: .3rem;
+    padding: .9rem 0 .5rem 0;
+  }
+
+  .fixture-home{
+    order: 1;
+    flex: 1 1 auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .fixture-home .teamBadge{
+    order: -1;
+    margin: 0;
+  }
+
+  .fixture-score-home{
+    order: 2;
+    flex: 0 0 2.2rem;
+    text-align: right;
+  }
+
+  .fixture-away{
+    order: 3;
+    flex: 1 1 auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .fixture-score-away{
+    order: 4;
+    flex: 0 0 2.2rem;
+    text-align: right;
+  }
+
+  .fixture-middle{
+    order: 5;
+    flex: 0 0 100%;
+    text-align: left;
+    font-size: .8125rem;
+    margin-top: .2rem;
+  }
+
+  /* Managers and lineups: give a bit more breathing room and let the
+     two team columns stack instead of squeezing side by side */
+  .fixture-managers{
+    flex-direction: column;
+    gap: .2rem;
+  }
+
+  .fixture-lineups{
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 }
 
 /*
