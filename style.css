@@ -757,7 +757,9 @@ span:before{
 /* The red bar before spans shouldn't appear in these new sections */
 .comment-date:before,
 .byline span:before,
-.siteFooter span:before{
+.siteFooter span:before,
+.fixture-score-big span:before,
+.fixture-status-line:before{
   content: none;
 }
 
