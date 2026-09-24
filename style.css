@@ -630,33 +630,27 @@ span:before{
   font-size: 1rem;
 }
 
-.fixture-team{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
 .fixture-home{
-  align-items: flex-end;
-}
-
-.fixture-away{
-  align-items: flex-start;
-}
-
-.fixture-team-name{
-  display: flex;
-  align-items: center;
-  gap: .4rem;
+  flex: 1;
+  text-align: right;
   font-weight: 600;
   color: #1a1a1a;
 }
 
-.fixture-team-manager{
+.fixture-away{
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.fixture-managers-line{
+  text-align: center;
   font-size: .75rem;
   color: #8c8c8c;
   font-style: italic;
-  margin-top: .2rem;
+  margin-top: -.4rem;
+  padding-bottom: .5rem;
 }
 
 .fixture-middle{
@@ -810,9 +804,8 @@ span:before{
     font-size: .875rem;
   }
 
-  .fixture-team-name{
-    font-size: .875rem;
-    gap: .3rem;
+  .fixture-managers-line{
+    font-size: .7rem;
   }
 
   .fixture-middle{
