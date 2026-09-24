@@ -79,31 +79,30 @@ async function loadFixtures() {
     const awayGoals = fixtureGoals[f.away_team.id] || [];
 
     const hasLineups = homeLineup.length > 0 || awayLineup.length > 0;
-    const hasManagers = f.home_manager || f.away_manager;
     const hasGoals = isFinished && (homeGoals.length > 0 || awayGoals.length > 0);
 
     return `
       <div class="fixture-row">
-        <span class="fixture-home">
-          ${f.home_team.name}
-          ${badge(f.home_team.logo_url, f.home_team.name)}
-        </span>
+        <div class="fixture-team fixture-home">
+          <span class="fixture-team-name">
+            ${f.home_team.name}
+            ${badge(f.home_team.logo_url, f.home_team.name)}
+          </span>
+          ${f.home_manager ? `<span class="fixture-team-manager">${escapeHtml(f.home_manager)}</span>` : ''}
+        </div>
         <span class="fixture-middle">${middle}</span>
-        <span class="fixture-away">
-          ${badge(f.away_team.logo_url, f.away_team.name)}
-          ${f.away_team.name}
-        </span>
+        <div class="fixture-team fixture-away">
+          <span class="fixture-team-name">
+            ${badge(f.away_team.logo_url, f.away_team.name)}
+            ${f.away_team.name}
+          </span>
+          ${f.away_manager ? `<span class="fixture-team-manager">${escapeHtml(f.away_manager)}</span>` : ''}
+        </div>
       </div>
       ${hasGoals ? `
         <div class="fixture-goals">
           <span class="fixture-goals-home">${goalsLine(homeGoals)}</span>
           <span class="fixture-goals-away">${goalsLine(awayGoals)}</span>
-        </div>
-      ` : ''}
-      ${hasManagers ? `
-        <div class="fixture-managers">
-          <span>Manager: ${escapeHtml(f.home_manager || '—')}</span>
-          <span>Manager: ${escapeHtml(f.away_manager || '—')}</span>
         </div>
       ` : ''}
       ${hasLineups ? `
