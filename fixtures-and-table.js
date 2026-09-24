@@ -1,966 +1,208 @@
-/*
-  ========================================
-  Style Reset START
-  ========================================
-*/
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ol, ul {
-  list-style: none;
-}
-blockquote, q {
-  quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-/*
-  ========================================
-  Style Reset END
-  ========================================
+// ============================================
+// Fixtures list + league table — reads from Supabase
+// ============================================
+import { supabase } from './supabase-client.js';
 
-  ========================================
-  START CSS CODING . . . BEGIN!
-  ========================================
+// ---------- Fixtures ----------
+async function loadFixtures() {
+  const container = document.getElementById('fixtures-list');
+  if (!container) return; // this page doesn't have a fixtures section
 
-  ========================================
-  GRID
-  ========================================
-*/
-*,
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-}
-/*
-  ========================================
-  BASE (Colors, Fonts, Backgrounds)
-  ========================================
-*/
-body{
-  font-size: 62.5%;
-  background: white;
-  font-family: 'Open Sans', 'Arial', sans-serif;
-  color: #4a4a4a;
-}
+  const { data: fixtures, error } = await supabase
+    .from('fixtures')
+    .select(`
+      id, kickoff_time, home_score, away_score, status, home_manager, away_manager,
+      home_team:home_team_id ( id, name, logo_url ),
+      away_team:away_team_id ( id, name, logo_url )
+    `)
+    .order('kickoff_time', { ascending: true });
 
-header{
-  background: #034694;
-}
-.media{
-  line-height: 1.2rem;
-}
-
-header, article, li{
-  margin: 0 auto;
-}
-
-h1, .title h2{
-  font-size:1.375rem;
-  font-weight: bold;
-  color: #4a4a4a;
-}
-
-.title span:last-child{
-  color: #8c8c8c;
-  font-size:1.375rem;
-}
-
-.welcome{
-  color: white;
-  font-size: 1.75rem;
-  font-weight: bold;
-}
-
-.welcome h2{
-  padding: 17.5rem 1rem 1rem 1rem;
-}
-
-.welcome h3{
-  font-size: 1.125rem;
-  padding: 7.5rem 1rem 0rem 1rem;
-}
-
-.welcome span, .welcome p{
-  padding: 0 1rem;
-}
-
-.welcome span, .news span{
-  font-size: 1rem;
-  font-variant: all-small-caps;
-}
-.welcome span, .welcome p, p  {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #bfbebe;
-}
-
-.news h3{
-  font-size: 1.25rem;
-  font-weight: bold;
-  padding: 1rem 0;
-}
-
-.news p{
-  padding-bottom: 1rem;
-}
-
-.news, .news p{
-  color: #4a4a4a;
-}
-
-
-  /*
-  ========================================
-  LAYOUT (Sizing and Layout of Main Elements)
-  ========================================
-*/
-header{
-  width: 100%;
-  padding: 0 15%;
-}
-
-nav{
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-}
-
-.navBar{
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.navToggle{
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: .4rem .6rem;
-}
-
-.navList{
-  display: flex;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-article{
-  height: 500px;
-  width: 100%;
-  padding: 0 15%;
-}
-
-.title{
-  min-height: 75px;
-  max-height: 75px;
-  padding-right: 1%;
-  width: auto;
-}
-
-.title h1, .title h2{
-  float: left;
-  position: relative;
-  padding-top: 40px;
-}
-
-.title span{
-  float: right;
-  position: relative;
-  padding-top: 40px;
-}
-
-.mainSection, .quarterSection{
-  height: 400px;
-  width: 25%;
-  float: left;
-}
-
-.mainSection + .quarterSection{
-    padding: 0 1%;
-}
-
-.quarterSection + .quarterSection{
-  padding-right: 1%;
-}
-
-.quarterSection .babySection:first-child{
-  border-bottom: 4px solid white;
-}
-
-.mainSection{
-  height: 400px;
-  width: 50%;
-}
-
-.babySection{
-  height: 200px;
-  float: none;
-}
-
-.oneThird{
-  width: 33.33%;
-  height: 85%;
-  float: left;
-  padding-right: 1%;
-}
-
-.oneThird img{
-  height: 60%;
-  width: 100%;
-}
-
-/*
-  ========================================
-  MODULE (specific styles targeting individual parts of the page, such as navigation or feature styles)
-  ========================================
-*/
-.navList li{
-  float: none;
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  min-height: 0;
-  max-height: none;
-  padding: 0;
-  margin: 0 .1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: left;
-}
-
-.navList li a{
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: .6rem .8rem;
-  display: block;
-}
-
-.navList .outsideItem{
-  padding: 0 0 0 .5rem;
-}
-
-.navList #searchOption{
-  border: none;
-  padding: .45rem .7rem;
-  font-size: .875rem;
-  border-radius: 2px;
-  font-family: inherit;
-}
-
-.signIn{
-  text-align: center;
-}
-
-.logo, .accountImg{
-  height: 1.5rem;
-  padding-bottom: 2%;
-  float: left;
-}
-
-/*
-  ========================================
-  MOBILE NAV
-  ========================================
-*/
-@media (max-width: 700px){
-  header{
-    padding: 0 1rem;
+  if (error) {
+    console.error('Error loading fixtures:', error);
+    container.innerHTML = '<p>Could not load fixtures.</p>';
+    return;
   }
 
-  .navToggle{
-    display: block;
+  if (!fixtures || fixtures.length === 0) {
+    container.innerHTML = '<p>No fixtures yet.</p>';
+    return;
   }
 
-  .navList{
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    background: #034694;
-    z-index: 50;
-    box-shadow: 0 8px 12px rgba(0,0,0,.15);
+  // Fetch every lineup entry for these fixtures in one go, then group them
+  const fixtureIds = fixtures.map(f => f.id);
+  const { data: lineupRows, error: lineupError } = await supabase
+    .from('lineups')
+    .select('fixture_id, team_id, player_name, shirt_number, is_starting, sort_order')
+    .in('fixture_id', fixtureIds)
+    .order('sort_order', { ascending: true });
+
+  if (lineupError) {
+    console.error('Error loading lineups:', lineupError);
   }
 
-  .navList.navOpen{
-    display: flex;
+  const lineupsByFixture = {};
+  (lineupRows || []).forEach(row => {
+    if (!lineupsByFixture[row.fixture_id]) lineupsByFixture[row.fixture_id] = {};
+    if (!lineupsByFixture[row.fixture_id][row.team_id]) lineupsByFixture[row.fixture_id][row.team_id] = [];
+    lineupsByFixture[row.fixture_id][row.team_id].push(row);
+  });
+
+  // Fetch every goal for these fixtures in one go, then group them
+  const { data: goalRows, error: goalError } = await supabase
+    .from('goals')
+    .select('fixture_id, team_id, player_name, minute, is_own_goal')
+    .in('fixture_id', fixtureIds)
+    .order('minute', { ascending: true });
+
+  if (goalError) {
+    console.error('Error loading goals:', goalError);
   }
 
-  .navList li{
-    width: 100%;
-    margin: 0;
-    border-bottom: 1px solid rgba(255,255,255,.2);
+  const goalsByFixture = {};
+  (goalRows || []).forEach(row => {
+    if (!goalsByFixture[row.fixture_id]) goalsByFixture[row.fixture_id] = {};
+    if (!goalsByFixture[row.fixture_id][row.team_id]) goalsByFixture[row.fixture_id][row.team_id] = [];
+    goalsByFixture[row.fixture_id][row.team_id].push(row);
+  });
+
+  container.innerHTML = fixtures.map(f => {
+    const date = new Date(f.kickoff_time).toLocaleString();
+    const isFinished = f.status === 'finished';
+    const middle = isFinished ? `${f.home_score} – ${f.away_score}` : date;
+
+    const fixtureLineups = lineupsByFixture[f.id] || {};
+    const homeLineup = fixtureLineups[f.home_team.id] || [];
+    const awayLineup = fixtureLineups[f.away_team.id] || [];
+
+    const fixtureGoals = goalsByFixture[f.id] || {};
+    const homeGoals = fixtureGoals[f.home_team.id] || [];
+    const awayGoals = fixtureGoals[f.away_team.id] || [];
+
+    const hasLineups = homeLineup.length > 0 || awayLineup.length > 0;
+    const hasGoals = isFinished && (homeGoals.length > 0 || awayGoals.length > 0);
+
+    return `
+      <div class="fixture-row">
+        <span class="fixture-home">
+          ${f.home_team.name}
+          ${badge(f.home_team.logo_url, f.home_team.name)}
+        </span>
+        <span class="fixture-middle">${middle}</span>
+        <span class="fixture-away">
+          ${badge(f.away_team.logo_url, f.away_team.name)}
+          ${f.away_team.name}
+        </span>
+      </div>
+      ${f.home_manager || f.away_manager ? `
+        <div class="fixture-managers-line">
+          ${escapeHtml(f.home_manager || '—')} &middot; ${escapeHtml(f.away_manager || '—')}
+        </div>
+      ` : ''}
+      ${hasGoals ? `
+        <div class="fixture-goals">
+          <span class="fixture-goals-home">${goalsLine(homeGoals)}</span>
+          <span class="fixture-goals-away">${goalsLine(awayGoals)}</span>
+        </div>
+      ` : ''}
+      ${hasLineups ? `
+        <details class="fixture-lineups-toggle">
+          <summary>View lineups</summary>
+          <div class="fixture-lineups">
+            ${lineupColumn(f.home_team.name, homeLineup)}
+            ${lineupColumn(f.away_team.name, awayLineup)}
+          </div>
+        </details>
+      ` : ''}
+    `;
+  }).join('');
+}
+
+// ---------- Renders one team's starting XI + subs list ----------
+function lineupColumn(teamName, players) {
+  const starting = players.filter(p => p.is_starting);
+  const subs = players.filter(p => !p.is_starting);
+
+  return `
+    <div class="lineup-column">
+      <h4 class="lineup-team">${escapeHtml(teamName)}</h4>
+      <ul class="lineup-list">
+        ${starting.map(p => `<li><span class="shirt-number">${p.shirt_number ?? ''}</span> ${escapeHtml(p.player_name)}</li>`).join('')}
+      </ul>
+      ${subs.length > 0 ? `
+        <p class="lineup-subs-heading">Subs</p>
+        <ul class="lineup-list lineup-subs">
+          ${subs.map(p => `<li><span class="shirt-number">${p.shirt_number ?? ''}</span> ${escapeHtml(p.player_name)}</li>`).join('')}
+        </ul>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ---------- League table ----------
+async function loadStandings() {
+  const container = document.getElementById('league-table');
+  if (!container) return; // this page doesn't have a table section
+
+  const { data, error } = await supabase
+    .from('standings')
+    .select(`
+      played, won, drawn, lost, goals_for, goals_against, points,
+      team:team_id ( name, logo_url )
+    `)
+    .order('points', { ascending: false });
+
+  if (error) {
+    console.error('Error loading standings:', error);
+    container.innerHTML = '<p>Could not load the league table.</p>';
+    return;
   }
 
-  .navList li a{
-    padding: 1rem 1.2rem;
-  }
-
-  .navList .outsideItem{
-    padding: .8rem 1.2rem;
-  }
-
-  .navList #searchOption{
-    width: 100%;
-  }
-}
-
-.mainSection{
-  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.files.bbci.co.uk%2F1676D%2Fproduction%2F_113931029_composite.jpg&f=1&nofb=1");
-}
-
-.one{
-  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fichef.bbci.co.uk%2Fnews%2F1024%2Fbranded_news%2FD39B%2Fproduction%2F_113917145_gettyimages-144092698.jpg&f=1&nofb=1");
-}
-
-.two{
-  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fychef.files.bbci.co.uk%2F1600x900%2Fp08ngz84.jpg&f=1&nofb=1");
-}
-
-.three{
-  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fantiguaobserver.com%2Fwp-content%2Fuploads%2F2020%2F04%2FVaccine-coronavirus.jpg&f=1&nofb=1");
-}
-
-.four{
-  background: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-WNYSYAt60tE%2FV3IlgIeY2AI%2FAAAAAAABDTI%2FuhrOWbrnqDgDP58MQs5RhexgBUitYx22gCLcB%2Fs1600%2Fvictor%252Bjara.jpg&f=1&nofb=1");
-}
-
-.mainSection, .babySection, .three{
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-}
-
-
-/*
-  ========================================
-  STATE (styles are then used to augment or override other styles in the event that a module includes an alternate state)
-  ========================================
-*/
-a:link, a:visited{
-  text-decoration: none;
-  color: inherit;
-}
-/*
-  ========================================
-  THEME (could include styles based around the skin, or look and feel, of different modules)
-  ========================================
-*/
-
-span:before{
-  content: '|';
-  color: #034694;
-  font-size: 1.5rem;
-  padding-right: .25rem;
-}
-
-.title span:before{
-  content: none;
-}
-
-/*throwing shade on this shade hrng >:( */
-.shade{
-  box-shadow: inset 0 -184px 244px -184px rgba(0,0,0,1);
-}
-.shade:first-child{
-  box-shadow: inset 0 -368px 488px -368px rgba(0,0,0,1);
-}
-/*
-  ========================================
-  ARTICLE PAGE
-  ========================================
-*/
-.siteName{
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: white;
-  letter-spacing: .02em;
-}
-
-.articlePage{
-  height: auto;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: 0 1.5rem 4rem 1.5rem;
-}
-
-.articleHeader{
-  padding-top: 2.5rem;
-}
-
-.category{
-  display: block;
-  font-size: 1rem;
-  font-variant: all-small-caps;
-  font-weight: 700;
-  color: #4a4a4a;
-  margin-bottom: .5rem;
-}
-
-.articleTitle{
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.15;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-}
-
-.standfirst{
-  font-size: 1.25rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #4a4a4a;
-  margin-bottom: 1rem;
-}
-
-.byline{
-  font-size: .9375rem;
-  font-weight: 600;
-  color: #8c8c8c;
-  margin-bottom: 1.5rem;
-}
-
-.articleImage{
-  width: 100%;
-  height: auto;
-  display: block;
-  margin-bottom: 2rem;
-}
-
-.articleBody p{
-  font-size: 1.125rem;
-  font-weight: 400;
-  line-height: 1.7;
-  color: #2d2d2d;
-  margin-bottom: 1.25rem;
-}
-
-.articleBody code{
-  background: #f2f2f2;
-  padding: .1rem .3rem;
-  font-size: .95rem;
-}
-
-.articleBody img{
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 1.75rem 0;
-}
-
-.articleBody figure{
-  margin: 1.75rem 0;
-}
-
-.articleBody figcaption{
-  font-size: .875rem;
-  color: #8c8c8c;
-  margin-top: .5rem;
-  text-align: center;
-}
-
-/*
-  ========================================
-  COMMENTS
-  ========================================
-*/
-.comments{
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 3px solid #034694;
-}
-
-.commentsHeading{
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1.5rem;
-}
-
-.commentsLoading{
-  font-size: 1rem;
-  color: #8c8c8c;
-}
-
-.comment{
-  padding: 1rem 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.comment strong{
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.comment-date{
-  font-size: .875rem;
-  color: #8c8c8c;
-  margin-left: .5rem;
-}
-
-.comment p{
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.6;
-  color: #2d2d2d;
-  margin-top: .4rem;
-}
-
-.commentForm{
-  margin-top: 2rem;
-}
-
-.commentLabel{
-  display: block;
-  font-size: .9375rem;
-  font-weight: 600;
-  color: #4a4a4a;
-  margin-bottom: 1rem;
-}
-
-.commentLabel input,
-.commentLabel textarea{
-  display: block;
-  width: 100%;
-  margin-top: .35rem;
-  padding: .6rem;
-  font-family: inherit;
-  font-size: 1rem;
-  color: #2d2d2d;
-  border: 1px solid #c4c4c4;
-  background: white;
-}
-
-.commentLabel textarea{
-  resize: vertical;
-}
-
-.commentButton{
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
-  background: #034694;
-  border: none;
-  padding: .7rem 1.4rem;
-  cursor: pointer;
-}
-
-.commentButton:hover{
-  background: #045bb5;
-}
-
-.commentStatus{
-  font-size: .9375rem;
-  color: #4a4a4a;
-  margin-top: .75rem;
-}
-
-/* Hides the bot-trap field from real users */
-.honeypot{
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-/*
-  ========================================
-  FIXTURES + LEAGUE TABLE
-  ========================================
-*/
-.dataPage{
-  height: auto;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem 1.5rem;
-}
-
-.fixture-row{
-  display: flex;
-  align-items: center;
-  padding: 1rem 0;
-  font-size: 1rem;
-}
-
-.fixture-home{
-  flex: 1;
-  text-align: right;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.fixture-away{
-  flex: 1;
-  text-align: left;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.fixture-managers-line{
-  text-align: center;
-  font-size: .75rem;
-  color: #8c8c8c;
-  font-style: italic;
-  margin-top: -.4rem;
-  padding-bottom: .5rem;
-}
-
-.fixture-middle{
-  flex: 0 0 6.5rem;
-  text-align: center;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #034694;
-}
-
-#league-table table{
-  width: 100%;
-  font-size: 1rem;
-}
-
-#league-table th{
-  text-align: left;
-  font-weight: 700;
-  font-size: .875rem;
-  font-variant: all-small-caps;
-  color: #4a4a4a;
-  padding: .6rem .4rem;
-  border-bottom: 2px solid #034694;
-}
-
-#league-table td{
-  padding: .65rem .4rem;
-  color: #2d2d2d;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-#league-table td:nth-child(2){
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-/*
-  ========================================
-  FOOTER
-  ========================================
-*/
-.siteFooter{
-  background: #034694;
-  color: #bfbebe;
-  padding: 1.5rem;
-  text-align: center;
-  font-size: .875rem;
-}
-
-.siteFooter p{
-  color: #bfbebe;
-}
-
-/* The red bar before spans shouldn't appear in these new sections */
-.comment-date:before,
-.byline span:before,
-.siteFooter span:before{
-  content: none;
-}
-
-/*
-  ========================================
-  HOMEPAGE — FEATURED + GRID
-  ========================================
-*/
-.featured{
-  margin-bottom: 2.5rem;
-}
-
-.featured a{
-  display: block;
-}
-
-.featuredImage{
-  width: 100%;
-  height: auto;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.featuredTitle{
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: #1a1a1a;
-  margin-bottom: .5rem;
-}
-
-.featuredExcerpt{
-  font-size: 1.125rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #4a4a4a;
-  margin-bottom: .5rem;
-}
-
-.featuredDate{
-  font-size: .875rem;
-  font-weight: 600;
-  color: #8c8c8c;
-}
-
-.articleGrid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.articleCard a{
-  display: block;
-}
-
-.cardImage{
-  width: 100%;
-  height: auto;
-  display: block;
-  margin-bottom: .6rem;
-}
-
-.cardTitle{
-  font-size: 1.0625rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: #1a1a1a;
-  margin-bottom: .35rem;
-}
-
-.cardDate{
-  font-size: .8125rem;
-  font-weight: 600;
-  color: #8c8c8c;
-}
-
-.cardExcerpt{
-  font-size: .9375rem;
-  font-weight: 400;
-  line-height: 1.4;
-  color: #4a4a4a;
-  margin-bottom: .4rem;
-}
-
-@media (max-width: 700px){
-  .articleGrid{
-    grid-template-columns: 1fr;
-  }
-
-  /* Fixtures: slightly smaller text on narrow screens, otherwise
-     the same layout as desktop */
-  .fixture-row{
-    padding: .9rem 0;
-    font-size: .875rem;
-  }
-
-  .fixture-managers-line{
-    font-size: .7rem;
-  }
-
-  .fixture-middle{
-    flex: 0 0 4.5rem;
-    font-size: .875rem;
-  }
-
-  .fixture-lineups{
-    gap: .75rem;
-  }
-
-  .lineup-list li{
-    font-size: .8125rem;
-  }
-}
-
-/*
-  ========================================
-  TEAM BADGES
-  ========================================
-*/
-.teamBadge{
-  height: 1.4rem;
-  width: 1.4rem;
-  object-fit: contain;
-  vertical-align: middle;
-  margin: 0 .4rem;
-}
-
-.fixture-home .teamBadge{
-  margin-left: .4rem;
-  margin-right: 0;
-}
-
-.fixture-away .teamBadge{
-  margin-right: .4rem;
-  margin-left: 0;
-}
-
-.teamCell .teamBadge{
-  margin: 0 .5rem 0 0;
-}
-
-/*
-  ========================================
-  FIXTURE MANAGERS + LINEUPS
-  ========================================
-*/
-.fixture-goals{
-  display: flex;
-  justify-content: space-between;
-  padding: 0 0 .5rem 0;
-  font-size: .8125rem;
-  color: #4a4a4a;
-}
-
-.fixture-goals-home{
-  text-align: right;
-  flex: 1;
-}
-
-.fixture-goals-away{
-  text-align: left;
-  flex: 1;
-}
-
-.fixture-lineups-toggle{
-  padding: 0 0 1rem 0;
-  margin-bottom: .5rem;
-}
-
-.fixture-lineups-toggle summary{
-  cursor: pointer;
-  font-size: .875rem;
-  font-weight: 700;
-  color: #034694;
-  padding: .3rem 0;
-  list-style: none;
-}
-
-.fixture-lineups-toggle summary::-webkit-details-marker{
-  display: none;
-}
-
-.fixture-lineups-toggle summary:before{
-  content: '▸ ';
-}
-
-.fixture-lineups-toggle[open] summary:before{
-  content: '▾ ';
-}
-
-.fixture-lineups{
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-top: .75rem;
-}
-
-.lineup-column{
-  flex: 1;
-}
-
-.lineup-team{
-  font-size: .9375rem;
-  font-weight: 700;
-  color: #034694;
-  margin-bottom: .5rem;
-}
-
-.lineup-list{
-  list-style: none;
-  font-size: .9375rem;
-  color: #2d2d2d;
-}
-
-.lineup-list li{
-  display: block;
-  float: none;
-  background: none;
-  color: #2d2d2d;
-  border: none;
-  text-align: left;
-  font-weight: 400;
-  font-size: .9375rem;
-  padding: .4rem 0;
-  min-height: 0;
-  max-height: none;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.lineup-list li:last-child{
-  border-bottom: none;
-}
-
-.lineup-list li:before{
-  content: none;
-}
-
-.shirt-number{
-  display: inline-block;
-  min-width: 1.4rem;
-  font-weight: 700;
-  color: #034694;
-}
-
-.lineup-subs-heading{
-  font-size: .8125rem;
-  font-weight: 700;
-  color: #8c8c8c;
-  margin-top: .6rem;
-  margin-bottom: .3rem;
-}
-
-.lineup-subs{
-  list-style: none;
-  padding-left: 0;
-}
+  const rows = data.map((row, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td class="teamCell">${badge(row.team.logo_url, row.team.name)} ${row.team.name}</td>
+      <td>${row.played}</td>
+      <td>${row.won}</td>
+      <td>${row.drawn}</td>
+      <td>${row.lost}</td>
+      <td>${row.goals_for - row.goals_against}</td>
+      <td>${row.points}</td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+// ---------- Formats a team's goals as "Kerr 23', James 67' (og)" ----------
+function goalsLine(goals) {
+  if (goals.length === 0) return '';
+  return goals.map(g => {
+    const minute = g.minute != null ? `${g.minute}'` : '';
+    const og = g.is_own_goal ? ' (og)' : '';
+    return `${escapeHtml(g.player_name)} ${minute}${og}`;
+  }).join(', ');
+}
+
+// ---------- Shared badge renderer ----------
+function badge(logoUrl, teamName) {
+  if (!logoUrl) return '';
+  return `<img src="${logoUrl}" alt="${teamName} badge" class="teamBadge">`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+loadFixtures();
+loadStandings();
