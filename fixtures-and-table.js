@@ -83,22 +83,21 @@ async function loadFixtures() {
 
     return `
       <div class="fixture-row">
-        <div class="fixture-team fixture-home">
-          <span class="fixture-team-name">
-            ${f.home_team.name}
-            ${badge(f.home_team.logo_url, f.home_team.name)}
-          </span>
-          ${f.home_manager ? `<span class="fixture-team-manager">${escapeHtml(f.home_manager)}</span>` : ''}
-        </div>
+        <span class="fixture-home">
+          ${f.home_team.name}
+          ${badge(f.home_team.logo_url, f.home_team.name)}
+        </span>
         <span class="fixture-middle">${middle}</span>
-        <div class="fixture-team fixture-away">
-          <span class="fixture-team-name">
-            ${badge(f.away_team.logo_url, f.away_team.name)}
-            ${f.away_team.name}
-          </span>
-          ${f.away_manager ? `<span class="fixture-team-manager">${escapeHtml(f.away_manager)}</span>` : ''}
-        </div>
+        <span class="fixture-away">
+          ${badge(f.away_team.logo_url, f.away_team.name)}
+          ${f.away_team.name}
+        </span>
       </div>
+      ${f.home_manager || f.away_manager ? `
+        <div class="fixture-managers-line">
+          ${escapeHtml(f.home_manager || '—')} &middot; ${escapeHtml(f.away_manager || '—')}
+        </div>
+      ` : ''}
       ${hasGoals ? `
         <div class="fixture-goals">
           <span class="fixture-goals-home">${goalsLine(homeGoals)}</span>
