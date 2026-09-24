@@ -623,42 +623,92 @@ span:before{
   padding: 2.5rem 1.5rem 4rem 1.5rem;
 }
 
-.fixture-row{
+.fixture-card{
+  padding: 2rem 0;
+}
+
+.fixture-teams-row{
   display: flex;
   align-items: center;
-  padding: 1rem 0;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.fixture-team-col{
+  flex: 1;
+  max-width: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.fixture-crest{
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: contain;
+  margin-bottom: .6rem;
+}
+
+.fixture-crest-placeholder{
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: .6rem;
+}
+
+.fixture-team-label{
+  font-size: .9375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.fixture-score-col{
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fixture-score-big{
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #034694;
+  line-height: 1;
+}
+
+.fixture-score-divider{
+  width: 1px;
+  height: 1.75rem;
+  background: #c4c4c4;
+}
+
+.fixture-status-line{
+  font-size: .8125rem;
+  font-weight: 600;
+  color: #8c8c8c;
+  margin-top: .5rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.fixture-status-upcoming{
   font-size: 1rem;
-}
-
-.fixture-home{
-  flex: 1;
-  text-align: right;
   font-weight: 600;
-  color: #1a1a1a;
-}
-
-.fixture-away{
-  flex: 1;
-  text-align: left;
-  font-weight: 600;
-  color: #1a1a1a;
+  color: #034694;
+  text-transform: none;
+  letter-spacing: normal;
+  margin-top: 0;
 }
 
 .fixture-managers-line{
   text-align: center;
-  font-size: .75rem;
+  font-size: .8125rem;
   color: #8c8c8c;
   font-style: italic;
-  margin-top: -.4rem;
-  padding-bottom: .5rem;
-}
-
-.fixture-middle{
-  flex: 0 0 6.5rem;
-  text-align: center;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #034694;
+  margin-top: 1rem;
 }
 
 #league-table table{
@@ -797,20 +847,36 @@ span:before{
     grid-template-columns: 1fr;
   }
 
-  /* Fixtures: slightly smaller text on narrow screens, otherwise
-     the same layout as desktop */
-  .fixture-row{
-    padding: .9rem 0;
+  /* Fixtures: smaller crests, tighter score, on narrow screens */
+  .fixture-card{
+    padding: 1.5rem 0;
+  }
+
+  .fixture-teams-row{
+    gap: 1rem;
+  }
+
+  .fixture-crest,
+  .fixture-crest-placeholder{
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .fixture-team-label{
+    font-size: .8125rem;
+  }
+
+  .fixture-score-big{
+    font-size: 1.75rem;
+    gap: .6rem;
+  }
+
+  .fixture-status-upcoming{
     font-size: .875rem;
   }
 
   .fixture-managers-line{
     font-size: .7rem;
-  }
-
-  .fixture-middle{
-    flex: 0 0 4.5rem;
-    font-size: .875rem;
   }
 
   .fixture-lineups{
