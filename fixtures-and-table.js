@@ -68,7 +68,6 @@ async function loadFixtures() {
   container.innerHTML = fixtures.map(f => {
     const date = new Date(f.kickoff_time).toLocaleString();
     const isFinished = f.status === 'finished';
-    const middle = isFinished ? `${f.home_score} – ${f.away_score}` : date;
 
     const fixtureLineups = lineupsByFixture[f.id] || {};
     const homeLineup = fixtureLineups[f.home_team.id] || [];
@@ -81,29 +80,47 @@ async function loadFixtures() {
     const hasLineups = homeLineup.length > 0 || awayLineup.length > 0;
     const hasGoals = isFinished && (homeGoals.length > 0 || awayGoals.length > 0);
 
+    const scoreBlock = isFinished ? `
+      <span class="fixture-score-big">
+        <span>${f.home_score}</span>
+        <span class="fixture-score-divider"></span>
+        <span>${f.away_score}</span>
+      </span>
+      <span class="fixture-status-line">FT</span>
+    ` : `
+      <span class="fixture-status-line fixture-status-upcoming">${date}</span>
+    `;
+
     return `
-      <div class="fixture-row">
-        <span class="fixture-home">
-          ${f.home_team.name}
-          ${badge(f.home_team.logo_url, f.home_team.name)}
-        </span>
-        <span class="fixture-middle">${middle}</span>
-        <span class="fixture-away">
-          ${badge(f.away_team.logo_url, f.away_team.name)}
-          ${f.away_team.name}
-        </span>
-      </div>
-      ${f.home_manager || f.away_manager ? `
-        <div class="fixture-managers-line">
-          ${escapeHtml(f.home_manager || '—')} &middot; ${escapeHtml(f.away_manager || '—')}
+      <div class="fixture-card">
+        <div class="fixture-teams-row">
+          <div class="fixture-team-col">
+            ${crest(f.home_team.logo_url, f.home_team.name)}
+            <span class="fixture-team-label">${f.home_team.name}</span>
+          </div>
+
+          <div class="fixture-score-col">
+            ${scoreBlock}
+          </div>
+
+          <div class="fixture-team-col">
+            ${crest(f.away_team.logo_url, f.away_team.name)}
+            <span class="fixture-team-label">${f.away_team.name}</span>
+          </div>
         </div>
-      ` : ''}
-      ${hasGoals ? `
-        <div class="fixture-goals">
-          <span class="fixture-goals-home">${goalsLine(homeGoals)}</span>
-          <span class="fixture-goals-away">${goalsLine(awayGoals)}</span>
-        </div>
-      ` : ''}
+
+        ${f.home_manager || f.away_manager ? `
+          <div class="fixture-managers-line">
+            ${escapeHtml(f.home_manager || '—')} &middot; ${escapeHtml(f.away_manager || '—')}
+          </div>
+        ` : ''}
+
+        ${hasGoals ? `
+          <div class="fixture-goals">
+            <span class="fixture-goals-home">${goalsLine(homeGoals)}</span>
+            <span class="fixture-goals-away">${goalsLine(awayGoals)}</span>
+          </div>
+        ` : ''}
       ${hasLineups ? `
         <details class="fixture-lineups-toggle">
           <summary>View lineups</summary>
@@ -113,6 +130,7 @@ async function loadFixtures() {
           </div>
         </details>
       ` : ''}
+      </div>
     `;
   }).join('');
 }
@@ -190,6 +208,12 @@ function goalsLine(goals) {
     const og = g.is_own_goal ? ' (og)' : '';
     return `${escapeHtml(g.player_name)} ${minute}${og}`;
   }).join(', ');
+}
+
+// ---------- Bigger centered crest for the match card layout ----------
+function crest(logoUrl, teamName) {
+  if (!logoUrl) return '<div class="fixture-crest-placeholder"></div>';
+  return `<img src="${logoUrl}" alt="${teamName} badge" class="fixture-crest">`;
 }
 
 // ---------- Shared badge renderer ----------
