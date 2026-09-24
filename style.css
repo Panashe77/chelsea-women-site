@@ -630,18 +630,33 @@ span:before{
   font-size: 1rem;
 }
 
-.fixture-home{
+.fixture-team{
   flex: 1;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.fixture-home{
+  align-items: flex-end;
+}
+
+.fixture-away{
+  align-items: flex-start;
+}
+
+.fixture-team-name{
+  display: flex;
+  align-items: center;
+  gap: .4rem;
   font-weight: 600;
   color: #1a1a1a;
 }
 
-.fixture-away{
-  flex: 1;
-  text-align: left;
-  font-weight: 600;
-  color: #1a1a1a;
+.fixture-team-manager{
+  font-size: .75rem;
+  color: #8c8c8c;
+  font-style: italic;
+  margin-top: .2rem;
 }
 
 .fixture-middle{
@@ -788,26 +803,16 @@ span:before{
     grid-template-columns: 1fr;
   }
 
-  /* Fixtures: stack each team on its own line instead of squeezing
-     five columns into a narrow width */
+  /* Fixtures: slightly smaller text on narrow screens, otherwise
+     the same layout as desktop */
   .fixture-row{
     padding: .9rem 0;
-    font-size: .9375rem;
+    font-size: .875rem;
   }
 
-  .fixture-home,
-  .fixture-away{
-    display: flex;
-    align-items: center;
-    gap: .35rem;
-  }
-
-  .fixture-home{
-    justify-content: flex-end;
-  }
-
-  .fixture-home .teamBadge{
-    order: 1;
+  .fixture-team-name{
+    font-size: .875rem;
+    gap: .3rem;
   }
 
   .fixture-middle{
@@ -815,16 +820,12 @@ span:before{
     font-size: .875rem;
   }
 
-  /* Managers and lineups: let the two team columns stack instead of
-     squeezing side by side in a narrow width */
-  .fixture-managers{
-    flex-direction: column;
-    gap: .2rem;
+  .fixture-lineups{
+    gap: .75rem;
   }
 
-  .fixture-lineups{
-    flex-direction: column;
-    gap: 1.25rem;
+  .lineup-list li{
+    font-size: .8125rem;
   }
 }
 
@@ -876,15 +877,6 @@ span:before{
 .fixture-goals-away{
   text-align: left;
   flex: 1;
-}
-
-.fixture-managers{
-  display: flex;
-  justify-content: space-between;
-  padding: 0 0 .5rem 0;
-  font-size: .8125rem;
-  color: #8c8c8c;
-  font-style: italic;
 }
 
 .fixture-lineups-toggle{
