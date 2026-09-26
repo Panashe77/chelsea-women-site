@@ -1032,3 +1032,108 @@ span:before{
   list-style: none;
   padding-left: 0;
 }
+
+/*
+  ========================================
+  MEMORY MATCH GAME
+  ========================================
+*/
+.game-meta{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #4a4a4a;
+}
+
+.game-status{
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #034694;
+  min-height: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.memory-board{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .8rem;
+}
+
+.memory-card{
+  position: relative;
+  aspect-ratio: 3 / 4;
+  perspective: 800px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.memory-card:disabled{
+  cursor: default;
+}
+
+.memory-card-inner{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 6px;
+  transition: transform .4s;
+  transform-style: preserve-3d;
+}
+
+.memory-card.is-flipped .memory-card-inner{
+  transform: rotateY(180deg);
+}
+
+.memory-card-back,
+.memory-card-front{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .4rem;
+  backface-visibility: hidden;
+  border-radius: 6px;
+}
+
+.memory-card-back{
+  background: #034694;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: .05em;
+}
+
+.memory-card-front{
+  background: white;
+  border: 2px solid #034694;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: .8125rem;
+  transform: rotateY(180deg);
+}
+
+.memory-card.is-matched .memory-card-front{
+  background: #e8f0fb;
+  border-color: #045bb5;
+  color: #034694;
+}
+
+@media (max-width: 700px){
+  .memory-board{
+    grid-template-columns: repeat(4, 1fr);
+    gap: .5rem;
+  }
+
+  .memory-card-front{
+    font-size: .6875rem;
+  }
+}
