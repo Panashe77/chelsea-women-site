@@ -1170,3 +1170,72 @@ span:before{
     font-size: .6875rem;
   }
 }
+
+/*
+  ========================================
+  ARTICLE LIKES
+  ========================================
+*/
+.like-section{
+  margin: 1.5rem 0 2rem 0;
+}
+
+.like-button{
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #034694;
+  background: white;
+  border: 2px solid #034694;
+  padding: .6rem 1.2rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.like-button:hover:not(:disabled){
+  background: #e8f0fb;
+}
+
+.like-button.is-liked{
+  background: #034694;
+  color: white;
+}
+
+.like-button:disabled{
+  cursor: default;
+}
+
+/*
+  ========================================
+  LEADERBOARD
+  ========================================
+*/
+.leaderboard-section{
+  margin-top: 2rem;
+}
+
+.leaderboard-list{
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboard-list li{
+  display: flex;
+  justify-content: space-between;
+  padding: .6rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: .9375rem;
+}
+
+.leaderboard-list li:first-child{
+  font-weight: 700;
+  color: #034694;
+}
+
+.leaderboard-name{
+  color: #1a1a1a;
+}
+
+.leaderboard-moves{
+  color: #8c8c8c;
+}
