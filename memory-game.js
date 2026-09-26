@@ -64,7 +64,7 @@ function render() {
             ${card.isMatched ? 'disabled' : ''}
             aria-label="${card.isFlipped || card.isMatched ? card.name : 'Hidden card'}">
       <span class="memory-card-inner">
-        <span class="memory-card-back">CFC</span>
+        <span class="memory-card-back">CFCW South</span>
         <span class="memory-card-front">${escapeHtml(card.name)}</span>
       </span>
     </button>
