@@ -1,10 +1,10 @@
 // ============================================
-// Memory Match — player name pairs
+// Memory Match — player name pairs, with difficulty levels
 // ============================================
 
-// Edit this list any time to change the roster in the game.
-// Needs an even spread — each name appears exactly twice automatically.
-const PLAYERS = [
+// Full squad pool — levels pull a subset of this list.
+// Edit freely; just make sure each level's count below matches.
+const ALL_PLAYERS = [
   'Hannah Hampton',
   'Nathalie Björn',
   'Kadeisha Buchanan',
@@ -13,18 +13,30 @@ const PLAYERS = [
   'Lauren James',
   'Guro Reiten',
   'Mayra Ramírez',
+  'Aggie Beever-Jones',
+  'Niamh Charles',
+  'Sandy Baltimore',
+  'Ashley Lawrence',
 ];
+
+const LEVELS = {
+  easy:   { label: 'Easy (6 pairs)',   count: 6,  columns: 4 },
+  medium: { label: 'Medium (8 pairs)', count: 8,  columns: 4 },
+  hard:   { label: 'Hard (12 pairs)',  count: 12, columns: 6 },
+};
 
 const boardEl = document.getElementById('game-board');
 const movesEl = document.getElementById('game-moves');
 const statusEl = document.getElementById('game-status');
 const restartBtn = document.getElementById('game-restart');
+const levelButtons = document.querySelectorAll('.level-btn');
 
 let cards = [];
 let flipped = [];
 let matchedCount = 0;
 let moves = 0;
 let lockBoard = false;
+let currentLevel = 'medium';
 
 function shuffle(array) {
   const arr = [...array];
@@ -35,12 +47,17 @@ function shuffle(array) {
   return arr;
 }
 
-function buildDeck() {
-  const deck = shuffle([...PLAYERS, ...PLAYERS]);
+function buildDeck(levelKey) {
+  const { count } = LEVELS[levelKey];
+  const players = shuffle(ALL_PLAYERS).slice(0, count);
+  const deck = shuffle([...players, ...players]);
   return deck.map((name, index) => ({ id: index, name, isFlipped: false, isMatched: false }));
 }
 
 function render() {
+  const { columns } = LEVELS[currentLevel];
+  boardEl.className = `memory-board board-cols-${columns}`;
+
   boardEl.innerHTML = cards.map(card => `
     <button class="memory-card ${card.isFlipped || card.isMatched ? 'is-flipped' : ''} ${card.isMatched ? 'is-matched' : ''}"
             data-id="${card.id}"
@@ -62,13 +79,19 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function startGame() {
-  cards = buildDeck();
+function startGame(levelKey) {
+  currentLevel = levelKey;
+  cards = buildDeck(levelKey);
   flipped = [];
   matchedCount = 0;
   moves = 0;
   lockBoard = false;
   statusEl.textContent = '';
+
+  levelButtons.forEach(btn => {
+    btn.classList.toggle('is-active', btn.dataset.level === levelKey);
+  });
+
   render();
 }
 
@@ -96,7 +119,7 @@ boardEl.addEventListener('click', (e) => {
       render();
 
       if (matchedCount === cards.length) {
-        statusEl.textContent = `You won in ${moves} moves! 🔵`;
+        statusEl.textContent = `You won ${LEVELS[currentLevel].label} in ${moves} moves! 🔵`;
       }
     } else {
       lockBoard = true;
@@ -111,6 +134,10 @@ boardEl.addEventListener('click', (e) => {
   }
 });
 
-restartBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', () => startGame(currentLevel));
 
-startGame();
+levelButtons.forEach(btn => {
+  btn.addEventListener('click', () => startGame(btn.dataset.level));
+});
+
+startGame(currentLevel);
