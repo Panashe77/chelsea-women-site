@@ -1,6 +1,7 @@
 // ============================================
 // Memory Match — player name pairs, with difficulty levels
 // ============================================
+import { supabase } from './supabase-client.js';
 
 // Full squad pool — levels pull a subset of this list.
 // Edit freely; just make sure each level's count below matches.
@@ -30,6 +31,7 @@ const movesEl = document.getElementById('game-moves');
 const statusEl = document.getElementById('game-status');
 const restartBtn = document.getElementById('game-restart');
 const levelButtons = document.querySelectorAll('.level-btn');
+const leaderboardListEl = document.getElementById('leaderboard-list');
 
 let cards = [];
 let flipped = [];
@@ -64,7 +66,7 @@ function render() {
             ${card.isMatched ? 'disabled' : ''}
             aria-label="${card.isFlipped || card.isMatched ? card.name : 'Hidden card'}">
       <span class="memory-card-inner">
-        <span class="memory-card-back">CFCW South</span>
+        <span class="memory-card-back">CFC</span>
         <span class="memory-card-front">${escapeHtml(card.name)}</span>
       </span>
     </button>
@@ -92,6 +94,7 @@ function startGame(levelKey) {
     btn.classList.toggle('is-active', btn.dataset.level === levelKey);
   });
 
+  loadLeaderboard(levelKey);
   render();
 }
 
@@ -120,6 +123,7 @@ boardEl.addEventListener('click', (e) => {
 
       if (matchedCount === cards.length) {
         statusEl.textContent = `You won ${LEVELS[currentLevel].label} in ${moves} moves! 🔵`;
+        saveScore(currentLevel, moves);
       }
     } else {
       lockBoard = true;
@@ -139,5 +143,53 @@ restartBtn.addEventListener('click', () => startGame(currentLevel));
 levelButtons.forEach(btn => {
   btn.addEventListener('click', () => startGame(btn.dataset.level));
 });
+
+// ---------- Leaderboard ----------
+async function saveScore(level, moveCount) {
+  const name = prompt('New best run! Enter your name for the leaderboard:');
+  if (!name || !name.trim()) return;
+
+  const { error } = await supabase
+    .from('leaderboard')
+    .insert({ level, player_name: name.trim().slice(0, 30), moves: moveCount });
+
+  if (error) {
+    console.error('Error saving score:', error);
+    return;
+  }
+
+  loadLeaderboard(level);
+}
+
+async function loadLeaderboard(level) {
+  if (!leaderboardListEl) return;
+  leaderboardListEl.innerHTML = '<p class="commentsLoading">Loading…</p>';
+
+  const { data, error } = await supabase
+    .from('leaderboard')
+    .select('player_name, moves, created_at')
+    .eq('level', level)
+    .order('moves', { ascending: true })
+    .limit(10);
+
+  if (error) {
+    console.error('Error loading leaderboard:', error);
+    leaderboardListEl.innerHTML = '<p>Could not load the leaderboard.</p>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    leaderboardListEl.innerHTML = '<p>No scores yet for this level — be the first!</p>';
+    return;
+  }
+
+  leaderboardListEl.innerHTML = `
+    <ol class="leaderboard-list">
+      ${data.map(row => `
+        <li><span class="leaderboard-name">${escapeHtml(row.player_name)}</span><span class="leaderboard-moves">${row.moves} moves</span></li>
+      `).join('')}
+    </ol>
+  `;
+}
 
 startGame(currentLevel);
