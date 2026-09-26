@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Memory Match — Chelsea Women</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+		<script data-goatcounter="https://bigh2323.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+	</head>
+	<body>
+
+		<header>
+			<nav>
+				<div class="navBar">
+					<a href="index.html" class="siteName">Chelsea Women</a>
+					<button class="navToggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+				</div>
+				<ul class="navList" id="navList">
+					<li><a href="index.html" class="home">Home</a></li>
+					<li><a href="articles.html" class="news">Articles</a></li>
+					<li><a href="fixtures.html" class="fixtures">Fixtures</a></li>
+					<li><a href="table.html" class="table">Table</a></li>
+					<li><a href="game.html" class="game">Game</a></li>
+					<li class="outsideItem"><input type="search" id="searchOption" name="q" placeholder="Search"></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main>
+			<article class="dataPage">
+				<h1 class="articleTitle">Memory Match</h1>
+				<p class="standfirst" style="margin-bottom:1.5rem;">Flip two cards at a time and match the player names.</p>
+
+				<div class="game-meta">
+					<span>Moves: <strong id="game-moves">0</strong></span>
+					<button id="game-restart" class="commentButton">Restart</button>
+				</div>
+
+				<p id="game-status" class="game-status"></p>
+
+				<div id="game-board" class="memory-board"></div>
+			</article>
+		</main>
+
+		<footer class="siteFooter">
+			<p>Chelsea Women &middot; Built with HTML, CSS and Supabase</p>
+		</footer>
+
+		<script src="nav-toggle.js"></script>
+		<script src="memory-game.js"></script>
+	</body>
+</html>
