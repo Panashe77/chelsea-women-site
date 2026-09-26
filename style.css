@@ -1038,6 +1038,29 @@ span:before{
   MEMORY MATCH GAME
   ========================================
 */
+.level-selector{
+  display: flex;
+  gap: .6rem;
+  margin-bottom: 1.25rem;
+}
+
+.level-btn{
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 600;
+  color: #034694;
+  background: white;
+  border: 1px solid #034694;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.level-btn.is-active{
+  background: #034694;
+  color: white;
+}
+
 .game-meta{
   display: flex;
   align-items: center;
@@ -1057,8 +1080,15 @@ span:before{
 
 .memory-board{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: .8rem;
+}
+
+.board-cols-4{
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.board-cols-6{
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .memory-card{
@@ -1129,8 +1159,11 @@ span:before{
 
 @media (max-width: 700px){
   .memory-board{
-    grid-template-columns: repeat(4, 1fr);
     gap: .5rem;
+  }
+
+  .board-cols-6{
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .memory-card-front{
