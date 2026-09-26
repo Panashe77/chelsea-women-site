@@ -12,6 +12,8 @@ const standfirstEl = document.getElementById('article-standfirst');
 const bodyEl = document.getElementById('article-body');
 const imageEl = document.getElementById('article-image');
 const bylineEl = document.getElementById('article-byline');
+const likeBtn = document.getElementById('like-button');
+const likeCountEl = document.getElementById('like-count');
 
 async function loadArticle() {
   if (!slug) {
@@ -22,7 +24,7 @@ async function loadArticle() {
 
   const { data: article, error } = await supabase
     .from('articles')
-    .select('id, title, standfirst, body, image_url, published_at')
+    .select('id, title, standfirst, body, image_url, published_at, likes')
     .eq('slug', slug)
     .single();
 
@@ -33,7 +35,7 @@ async function loadArticle() {
     return;
   }
 
-  document.title = `${article.title} — CFCW South`;
+  document.title = `${article.title} — Chelsea Women`;
   titleEl.textContent = article.title;
 
   if (article.standfirst) {
@@ -58,6 +60,32 @@ async function loadArticle() {
   // Body is now written as HTML directly in Supabase — wrap paragraphs in
   // <p> tags yourself, and drop an <img> tag wherever you want a picture.
   bodyEl.innerHTML = article.body;
+
+  // ---------- Likes ----------
+  likeCountEl.textContent = article.likes ?? 0;
+
+  const likedKey = `liked-${slug}`;
+  if (localStorage.getItem(likedKey)) {
+    likeBtn.disabled = true;
+    likeBtn.classList.add('is-liked');
+  }
+
+  likeBtn.addEventListener('click', async () => {
+    if (localStorage.getItem(likedKey)) return;
+
+    likeBtn.disabled = true;
+    const { data, error } = await supabase.rpc('increment_article_likes', { input_slug: slug });
+
+    if (error) {
+      console.error('Error liking article:', error);
+      likeBtn.disabled = false;
+      return;
+    }
+
+    likeCountEl.textContent = data;
+    likeBtn.classList.add('is-liked');
+    localStorage.setItem(likedKey, 'true');
+  });
 
   // Now that we know the article's real id, start loading its comments
   initComments(article.id);
