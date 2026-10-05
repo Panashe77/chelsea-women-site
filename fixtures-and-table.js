@@ -166,14 +166,24 @@ async function loadStandings() {
     .select(`
       played, won, drawn, lost, goals_for, goals_against, points,
       team:team_id ( name, logo_url )
-    `)
-    .order('points', { ascending: false });
+    `);
 
   if (error) {
     console.error('Error loading standings:', error);
     container.innerHTML = '<p>Could not load the league table.</p>';
     return;
   }
+
+  // Standard football tiebreakers: points first, then goal difference,
+  // then goals scored, since the database can't sort on a computed
+  // goal-difference value directly.
+  data.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    const gdA = a.goals_for - a.goals_against;
+    const gdB = b.goals_for - b.goals_against;
+    if (gdB !== gdA) return gdB - gdA;
+    return b.goals_for - a.goals_for;
+  });
 
   const rows = data.map((row, index) => `
     <tr>
