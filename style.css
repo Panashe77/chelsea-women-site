@@ -1239,3 +1239,130 @@ span:before{
 .leaderboard-moves{
   color: #8c8c8c;
 }
+
+
+/*
+  ========================================
+  CHELSEA WORDLE
+  ========================================
+*/
+.wordle-message{
+  min-height: 1.5rem;
+  font-weight: 700;
+  color: #034694;
+  margin-bottom: 1rem;
+}
+
+.wordle-board{
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  max-width: 22rem;
+  margin: 0 auto 1.5rem auto;
+}
+
+.wordle-row{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .4rem;
+}
+
+.wordle-tile{
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #c4c4c4;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.wordle-tile.tile-filled{
+  border-color: #8c8c8c;
+}
+
+.wordle-tile.tile-green{
+  background: #034694;
+  border-color: #034694;
+  color: white;
+}
+
+.wordle-tile.tile-yellow{
+  background: #c99a2e;
+  border-color: #c99a2e;
+  color: white;
+}
+
+.wordle-tile.tile-gray{
+  background: #8c8c8c;
+  border-color: #8c8c8c;
+  color: white;
+}
+
+.wordle-keyboard{
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.wordle-key-row{
+  display: flex;
+  justify-content: center;
+  gap: .3rem;
+}
+
+.wordle-key{
+  font-family: inherit;
+  font-size: .8125rem;
+  font-weight: 700;
+  padding: .7rem .5rem;
+  min-width: 2rem;
+  background: #e8e8e8;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.wordle-key-wide{
+  min-width: 3.2rem;
+  font-size: .6875rem;
+}
+
+.wordle-key.key-green{
+  background: #034694;
+  color: white;
+}
+
+.wordle-key.key-yellow{
+  background: #c99a2e;
+  color: white;
+}
+
+.wordle-key.key-gray{
+  background: #4a4a4a;
+  color: white;
+}
+
+@media (max-width: 500px){
+  .wordle-tile{
+    font-size: 1.125rem;
+  }
+
+  .wordle-key{
+    padding: .6rem .35rem;
+    font-size: .75rem;
+    min-width: 1.6rem;
+  }
+
+  .wordle-key-wide{
+    min-width: 2.4rem;
+    font-size: .625rem;
+  }
+}
