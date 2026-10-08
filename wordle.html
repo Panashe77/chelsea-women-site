@@ -30,15 +30,67 @@
 		</header>
 
 		<main>
-			<article class="dataPage">
+			<article class="dataPage wordle-page">
 				<h1 class="articleTitle">Chelsea Wordle</h1>
-				<p class="standfirst" style="margin-bottom:1rem;">One football word a day. Six guesses.</p>
+				<p class="standfirst" style="margin-bottom:1.5rem;">One football word a day. Six guesses.</p>
 
-				<p id="wordle-message" class="wordle-message"></p>
+				<div class="wordle-layout">
 
-				<div id="wordle-board" class="wordle-board"></div>
+					<aside class="wordle-instructions">
+						<details id="wordle-howto" open>
+							<summary>How to play</summary>
 
-				<div id="wordle-keyboard" class="wordle-keyboard"></div>
+							<p>Guess today's football word in 6 tries.</p>
+							<p>Each guess must be a real 5-letter word. Press <strong>Enter</strong> to submit it.</p>
+							<p>After each guess, the colour of the tiles shows how close you were:</p>
+
+							<div class="wordle-example">
+								<div class="wordle-example-row">
+									<div class="wordle-tile wordle-tile-sm tile-green">B</div>
+									<div class="wordle-tile wordle-tile-sm">L</div>
+									<div class="wordle-tile wordle-tile-sm">U</div>
+									<div class="wordle-tile wordle-tile-sm">E</div>
+									<div class="wordle-tile wordle-tile-sm">S</div>
+								</div>
+								<p><strong>B</strong> is in the word and in the right spot.</p>
+							</div>
+
+							<div class="wordle-example">
+								<div class="wordle-example-row">
+									<div class="wordle-tile wordle-tile-sm">P</div>
+									<div class="wordle-tile wordle-tile-sm tile-yellow">I</div>
+									<div class="wordle-tile wordle-tile-sm">T</div>
+									<div class="wordle-tile wordle-tile-sm">C</div>
+									<div class="wordle-tile wordle-tile-sm">H</div>
+								</div>
+								<p><strong>I</strong> is in the word but in the wrong spot.</p>
+							</div>
+
+							<div class="wordle-example">
+								<div class="wordle-example-row">
+									<div class="wordle-tile wordle-tile-sm">V</div>
+									<div class="wordle-tile wordle-tile-sm">E</div>
+									<div class="wordle-tile wordle-tile-sm">N</div>
+									<div class="wordle-tile wordle-tile-sm tile-gray">U</div>
+									<div class="wordle-tile wordle-tile-sm">E</div>
+								</div>
+								<p><strong>U</strong> is not in the word at all.</p>
+							</div>
+
+							<p>Answers are football terms and Chelsea names, so a surname or a first name can be the answer too.</p>
+							<p>There's a new word every day (it changes at midnight UTC), and everyone gets the same one. Come back tomorrow!</p>
+						</details>
+					</aside>
+
+					<section class="wordle-main">
+						<p id="wordle-message" class="wordle-message"></p>
+
+						<div id="wordle-board" class="wordle-board"></div>
+
+						<div id="wordle-keyboard" class="wordle-keyboard"></div>
+					</section>
+
+				</div>
 			</article>
 		</main>
 
@@ -48,5 +100,12 @@
 
 		<script src="nav-toggle.js"></script>
 		<script src="wordle.js"></script>
+		<script>
+			// On narrow screens, start with the instructions collapsed so the
+			// board is visible straight away (tap "How to play" to open them).
+			if (window.innerWidth < 800) {
+				document.getElementById('wordle-howto').removeAttribute('open');
+			}
+		</script>
 	</body>
 </html>
