@@ -1,0 +1,47 @@
+# Rebuilds the per-article share pages (a/<slug>/index.html).
+# Save this file in your repo as:  .github/workflows/build-share-pages.yml
+name: Build share pages
+
+on:
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+  schedule:
+    - cron: '17 * * * *'    # and once an hour, at 17 minutes past
+
+permissions:
+  contents: write           # needed so the job can commit the generated pages
+
+concurrency:
+  group: build-share-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate share pages
+        run: node build-share-pages.mjs
+        env:
+          # These two values are public by design (they're already in supabase-client.js)
+          SUPABASE_URL: https://ujvvujfkxpwzxywqqtdm.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_Swzl2A5oUC9pJABlKH4Chw_vUt8bOzV
+          SITE_URL: https://panashe77.github.io/chelsea-women-site
+
+      - name: Commit any changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update share pages"
+            git push
+          fi
