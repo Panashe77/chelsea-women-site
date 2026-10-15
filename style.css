@@ -1574,3 +1574,26 @@ span:before{
     width: 100%;
   }
 }
+
+
+/* HOMEPAGE SNAPSHOT */
+.snapshot{ margin-bottom: 2.5rem; }
+.snap-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.snap-card{ display: flex; flex-direction: column; background: #f4f7fc; border-radius: 6px; padding: 1rem 1.25rem; min-width: 0; }
+.snap-heading{ font-size: .8125rem; font-weight: 700; color: #034694; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .9rem; }
+.snap-match{ display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .6rem; }
+.snap-team{ flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; font-size: .875rem; font-weight: 600; line-height: 1.25; color: #1a1a1a; }
+.snap-crest, .snap-crest-empty{ width: 2.25rem; height: 2.25rem; margin-bottom: .4rem; }
+.snap-crest{ object-fit: contain; }
+.snap-centre{ flex: 0 0 auto; padding-top: .45rem; font-size: 1.5rem; font-weight: 700; color: #034694; white-space: nowrap; }
+.snap-vs{ font-size: .875rem; font-weight: 600; color: #8c8c8c; }
+.snap-meta{ text-align: center; font-size: .8125rem; color: #4a4a4a; }
+.snap-empty{ font-size: .875rem; color: #4a4a4a; margin-bottom: .5rem; }
+.snap-card a.snap-link:link, .snap-card a.snap-link:visited{ margin-top: auto; padding-top: .9rem; font-size: .8125rem; font-weight: 700; color: #034694; }
+.snap-table{ width: 100%; font-size: .8125rem; border-collapse: collapse; }
+.snap-table th{ text-align: left; font-weight: 700; font-size: .75rem; color: #8c8c8c; padding: .25rem .3rem .4rem 0; }
+.snap-table td{ padding: .35rem .3rem .35rem 0; color: #2d2d2d; }
+.snap-table th:nth-child(n+3), .snap-table td:nth-child(n+3){ text-align: right; }
+.snap-me td{ font-weight: 700; color: #034694; }
+.snap-pinned td{ border-top: 1px dashed #c4c4c4; }
+@media (max-width: 800px){ .snap-grid{ grid-template-columns: 1fr; } }
