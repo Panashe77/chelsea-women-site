@@ -2,10 +2,21 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="description" content="Women's football news, analysis, fixtures and tables">
+		<meta name="description" content="Chelsea Women fan site: articles, fixtures, results, league table, lineups and daily games.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<title>Chelsea Women</title>
+
+		<!-- Social previews (Reddit, WhatsApp, X, Discord...) -->
+		<meta property="og:site_name" content="Chelsea Women">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Chelsea Women">
+		<meta property="og:description" content="Articles, fixtures, results, league table, lineups and daily games for Chelsea Women fans.">
+		<meta property="og:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="Chelsea Women">
+		<meta name="twitter:description" content="Articles, fixtures, results, league table, lineups and daily games for Chelsea Women fans.">
+		<meta name="twitter:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
 
 		<link rel="stylesheet" href="style.css">
 		<link rel="preconnect" href="https://fonts.gstatic.com">
@@ -25,7 +36,7 @@
 					<li><a href="articles.html" class="news">Articles</a></li>
 					<li><a href="fixtures.html" class="fixtures">Fixtures</a></li>
 					<li><a href="table.html" class="table">Table</a></li>
-					<li><a href="game.html" class="game">Game</a></li>
+					<li><a href="game.html" class="game">Memory</a></li>
 					<li><a href="wordle.html" class="wordle">Wordle</a></li>
 					<li class="outsideItem"><input type="search" id="searchOption" name="q" placeholder="Search"></li>
 				</ul>
@@ -34,6 +45,8 @@
 
 		<main>
 			<article class="dataPage">
+
+				<section id="home-snapshot" class="snapshot"></section>
 
 				<section id="featured-article" class="featured">
 					<p class="commentsLoading">Loading…</p>
@@ -49,6 +62,7 @@
 		</footer>
 
 		<script src="nav-toggle.js"></script>
+		<script type="module" src="home-snapshot.js"></script>
 		<script type="module" src="homepage.js"></script>
 	</body>
 </html>
