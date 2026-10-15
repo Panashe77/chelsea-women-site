@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex, nofollow">
+		<title>Admin | Chelsea Women</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+
+		<main>
+			<article class="dataPage">
+				<h1 class="articleTitle">Admin</h1>
+
+				<!-- ========== LOGIN ========== -->
+				<section id="login-section" hidden>
+					<form id="login-form" class="commentForm">
+						<label class="commentLabel">
+							Email
+							<input type="email" name="email" required autocomplete="username">
+						</label>
+						<label class="commentLabel">
+							Password
+							<input type="password" name="password" required autocomplete="current-password">
+						</label>
+						<button type="submit" class="commentButton">Sign in</button>
+						<p id="login-status" class="commentStatus"></p>
+					</form>
+				</section>
+
+				<!-- ========== ADMIN TOOLS (only shown when signed in) ========== -->
+				<section id="admin-section" hidden>
+
+					<div class="game-meta">
+						<div id="admin-who" class="commentStatus"></div>
+						<button type="button" id="sign-out" class="level-btn">Sign out</button>
+					</div>
+
+					<label class="commentLabel">
+						Fixture
+						<select id="fixture-select"></select>
+					</label>
+
+					<div class="level-selector">
+						<button type="button" class="level-btn is-active" data-tab="lineups">Lineups</button>
+						<button type="button" class="level-btn" data-tab="goals">Goals</button>
+					</div>
+
+					<!-- LINEUPS -->
+					<form id="lineups-form" data-panel="lineups">
+						<h2 class="lineup-team" id="lineups-home-label">Home team</h2>
+						<label class="commentLabel">
+							Starting XI: one per line, "number, name" (e.g. "7, Sam Kerr")
+							<textarea name="home_starters" rows="11" placeholder="1, Hannah Hampton&#10;4, Nathalie Bjorn"></textarea>
+						</label>
+						<label class="commentLabel">
+							Subs (same format)
+							<textarea name="home_subs" rows="6"></textarea>
+						</label>
+
+						<h2 class="lineup-team" id="lineups-away-label" style="margin-top:1.5rem;">Away team</h2>
+						<label class="commentLabel">
+							Starting XI
+							<textarea name="away_starters" rows="11"></textarea>
+						</label>
+						<label class="commentLabel">
+							Subs
+							<textarea name="away_subs" rows="6"></textarea>
+						</label>
+
+						<button type="submit" class="commentButton">Save lineups</button>
+						<p id="lineups-status" class="commentStatus"></p>
+					</form>
+
+					<!-- GOALS -->
+					<form id="goals-form" data-panel="goals" hidden>
+						<h2 class="lineup-team" id="goals-home-label">Home team</h2>
+						<label class="commentLabel">
+							Goals: one per line, "minute, name" or "minute, name, og" for an own goal
+							<textarea name="home_goals" rows="6" placeholder="23, Kerr&#10;67, Kerr"></textarea>
+						</label>
+
+						<h2 class="lineup-team" id="goals-away-label" style="margin-top:1.5rem;">Away team</h2>
+						<label class="commentLabel">
+							Goals
+							<textarea name="away_goals" rows="6" placeholder="45, Buchanan, og"></textarea>
+						</label>
+
+						<button type="submit" class="commentButton">Save goals</button>
+						<p id="goals-status" class="commentStatus"></p>
+
+						<p class="commentStatus" style="margin-top:1.5rem;">
+							Goals only decorate a fixture. The scoreline, status ("finished") and managers are still edited in the Supabase table editor.
+						</p>
+					</form>
+
+				</section>
+
+				<p class="commentStatus" style="margin-top:2rem;"><a href="index.html">Back to the site</a></p>
+			</article>
+		</main>
+
+		<script type="module" src="admin.js"></script>
+	</body>
+</html>
