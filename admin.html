@@ -8,6 +8,17 @@
 		<link rel="stylesheet" href="style.css">
 		<link rel="preconnect" href="https://fonts.gstatic.com">
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+		<style>
+			.table-preview{ width:100%; border-collapse:collapse; font-size:.8125rem; margin:1rem 0; }
+			.table-preview th{ text-align:left; font-weight:700; color:#8c8c8c; padding:.3rem .4rem; }
+			.table-preview td{ padding:.4rem; color:#2d2d2d; vertical-align:top; }
+			.table-preview .row-ok td:first-child{ border-left:3px solid #6aaa64; }
+			.table-preview .row-warn td:first-child{ border-left:3px solid #c9b458; }
+			.table-preview .row-error td:first-child{ border-left:3px solid #c0392b; }
+			.table-preview .note-warn{ color:#8a6d0b; }
+			.table-preview .note-error{ color:#c0392b; font-weight:600; }
+			.table-summary{ font-size:.9375rem; color:#2d2d2d; margin-bottom:.5rem; }
+		</style>
 	</head>
 	<body>
 
@@ -39,14 +50,17 @@
 						<button type="button" id="sign-out" class="level-btn">Sign out</button>
 					</div>
 
-					<label class="commentLabel">
-						Fixture
-						<select id="fixture-select"></select>
-					</label>
+					<div id="fixture-picker">
+						<label class="commentLabel">
+							Fixture
+							<select id="fixture-select"></select>
+						</label>
+					</div>
 
 					<div class="level-selector">
 						<button type="button" class="level-btn is-active" data-tab="lineups">Lineups</button>
 						<button type="button" class="level-btn" data-tab="goals">Goals</button>
+						<button type="button" class="level-btn" data-tab="table">Table</button>
 					</div>
 
 					<!-- LINEUPS -->
@@ -94,6 +108,25 @@
 
 						<p class="commentStatus" style="margin-top:1.5rem;">
 							Goals only decorate a fixture. The scoreline, status ("finished") and managers are still edited in the Supabase table editor.
+						</p>
+					</form>
+
+					<!-- LEAGUE TABLE -->
+					<form id="table-form" data-panel="table" hidden>
+						<label class="commentLabel">
+							Paste the league table from any results site (copy the whole table, one team per row)
+							<textarea name="table_text" rows="16" placeholder="1  Manchester City  5  5  0  0  17  6  +11  15&#10;2  Chelsea  5  4  1  0  12  1  +11  13"></textarea>
+						</label>
+
+						<button type="button" id="table-preview-btn" class="commentButton">Preview</button>
+						<p id="table-status" class="commentStatus"></p>
+
+						<div id="table-preview-area"></div>
+
+						<button type="submit" id="table-save-btn" class="commentButton" hidden>Save table</button>
+
+						<p class="commentStatus" style="margin-top:1.5rem;">
+							Columns expected after the team name: P, W, D, L, GF, GA, GD (optional), Pts. Extra columns such as form are ignored. Saving updates each team's row in the standings table.
 						</p>
 					</form>
 
