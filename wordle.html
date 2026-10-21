@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-
-		<meta property="og:site_name" content="Chelsea Women">
-		<meta property="og:type" content="website">
-		<meta property="og:title" content="Chelsea Women">
-		<meta property="og:description" content="Articles, fixtures, results, league table, lineups and daily games for Chelsea Women fans.">
-		<meta property="og:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
-		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Chelsea Wordle</title>
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="wordle.css">
+
+		<!-- Social previews (Reddit, WhatsApp, X, Discord...) -->
+		<meta property="og:site_name" content="Chelsea Women">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Chelsea Wordle: one football word a day">
+		<meta property="og:description" content="Guess today's Chelsea and football word in six tries. Same word for every fan.">
+		<meta property="og:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="Chelsea Wordle: one football word a day">
+		<meta name="twitter:description" content="Guess today's Chelsea and football word in six tries. Same word for every fan.">
+		<meta name="twitter:image" content="https://panashe77.github.io/chelsea-women-site/share-default.png">
 		<link rel="preconnect" href="https://fonts.gstatic.com">
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 		<script data-goatcounter="https://bigh2323.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -91,9 +95,16 @@
 					</aside>
 
 					<section class="wordle-main">
+						<div id="wordle-hint" class="wordle-hint"></div>
+
 						<p id="wordle-message" class="wordle-message"></p>
 
 						<div id="wordle-board" class="wordle-board"></div>
+
+						<div id="wordle-end" class="wordle-end" hidden>
+							<button type="button" id="wordle-share" class="wordle-share">Share your result</button>
+							<div id="wordle-share-status" class="wordle-share-status"></div>
+						</div>
 
 						<div id="wordle-keyboard" class="wordle-keyboard"></div>
 					</section>
@@ -107,7 +118,7 @@
 		</footer>
 
 		<script src="nav-toggle.js"></script>
-		<script src="wordle.js"></script>
+		<script type="module" src="wordle.js"></script>
 		<script>
 			// On narrow screens, start with the instructions collapsed so the
 			// board is visible straight away (tap "How to play" to open them).
