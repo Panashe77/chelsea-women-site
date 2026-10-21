@@ -1,0 +1,132 @@
+/*
+  ========================================
+  CHELSEA WORDLE: look and feel
+  Loaded AFTER style.css on wordle.html only, so these rules
+  override the older green/yellow Wordle colours without
+  touching style.css.
+  ========================================
+*/
+.wordle-page{
+  --w-correct: #034694;   /* Chelsea blue */
+  --w-present: #dba111;   /* gold */
+  --w-absent:  #6b6f72;   /* grey */
+}
+
+/* ---------- Tile colours ---------- */
+.wordle-tile.tile-green{ --tile-bg: var(--w-correct); --tile-border: var(--w-correct); --tile-fg: #ffffff; }
+.wordle-tile.tile-yellow{ --tile-bg: var(--w-present); --tile-border: var(--w-present); --tile-fg: #1a1a1a; }
+.wordle-tile.tile-gray{ --tile-bg: var(--w-absent);  --tile-border: var(--w-absent);  --tile-fg: #ffffff; }
+
+.wordle-tile.tile-green,
+.wordle-tile.tile-yellow,
+.wordle-tile.tile-gray{
+  background-color: var(--tile-bg);
+  border-color: var(--tile-border);
+  color: var(--tile-fg);
+}
+
+/* ---------- Keyboard colours ---------- */
+.wordle-key.key-green{ background-color: var(--w-correct); color: #ffffff; }
+.wordle-key.key-yellow{ background-color: var(--w-present); color: #1a1a1a; }
+.wordle-key.key-gray{ background-color: var(--w-absent); color: #ffffff; }
+
+/* ---------- Flip reveal (each tile starts white, flips, lands on its colour) ---------- */
+@keyframes wordle-flip{
+  0%{
+    transform: rotateX(0);
+    background-color: #ffffff; border-color: #878a8c; color: #1a1a1a;
+  }
+  49%{
+    transform: rotateX(90deg);
+    background-color: #ffffff; border-color: #878a8c; color: #1a1a1a;
+  }
+  50%{
+    transform: rotateX(90deg);
+    background-color: var(--tile-bg); border-color: var(--tile-border); color: var(--tile-fg);
+  }
+  100%{
+    transform: rotateX(0);
+    background-color: var(--tile-bg); border-color: var(--tile-border); color: var(--tile-fg);
+  }
+}
+
+/* 280ms between tiles matches REVEAL_STEP_MS in wordle.js */
+.wordle-tile.tile-flip{
+  animation: wordle-flip 0.6s ease both;
+  animation-delay: calc(var(--col, 0) * 280ms);
+}
+
+/* ---------- Shake when a guess is rejected ---------- */
+@keyframes wordle-shake{
+  10%, 90%{ transform: translateX(-1px); }
+  20%, 80%{ transform: translateX(2px); }
+  30%, 50%, 70%{ transform: translateX(-5px); }
+  40%, 60%{ transform: translateX(5px); }
+}
+
+.wordle-row.row-shake{
+  animation: wordle-shake 0.5s;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .wordle-tile.tile-flip,
+  .wordle-row.row-shake{
+    animation: none;
+  }
+}
+
+/* ---------- Category / matchday banner ---------- */
+.wordle-hint{
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto .75rem auto;
+  padding: .3rem .9rem;
+  border-radius: 999px;
+  text-align: center;
+  font-size: .9375rem;
+  font-weight: 700;
+  color: #034694;
+  background: #e8f0fb;
+}
+
+.wordle-hint.is-special{
+  color: #5c4300;
+  background: #fbe9b0;
+}
+
+/* ---------- Share button ---------- */
+.wordle-end{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 auto 1.5rem auto;
+}
+
+.wordle-end[hidden],
+.wordle-keyboard[hidden]{
+  display: none;
+}
+
+.wordle-share{
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: #034694;
+  border: none;
+  border-radius: 999px;
+  padding: .75rem 2rem;
+  cursor: pointer;
+}
+
+.wordle-share:hover{
+  background: #045bb5;
+}
+
+.wordle-share-status{
+  min-height: 1.25rem;
+  font-size: .875rem;
+  font-weight: 600;
+  color: #034694;
+}
