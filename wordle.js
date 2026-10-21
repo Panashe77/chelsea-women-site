@@ -1,15 +1,35 @@
 // ============================================
-// Chelsea Wordle — daily puzzle, same word for everyone,
-// with guesses validated against a real word list
+// Chelsea Wordle: daily puzzle, same word for everyone.
+// - Built-in word list (below) picks a word each day.
+// - A word scheduled in Supabase for today (e.g. DERBY on derby day)
+//   takes priority over the built-in one.
+// - Guesses are checked against a real word list.
 // ============================================
+import { supabase } from './supabase-client.js';
 
 // Five-letter football terms + Chelsea player names/nicknames.
 // Add more any time — just keep them exactly 5 letters.
 const WORDS = [
-  'BLUES', 'JAMES', 'WALSH', 'HAYES', 'TITLE', 'DERBY', 'SAVES',
-  'FOULS', 'CARDS', 'VENUE', 'TEAMS', 'SQUAD', 'ROUND', 'GROUP',
-  'STAGE', 'FINAL', 'AGGIE', 'NIAMH', 'SANDY', 'MAYRA', 'GOALS',
-  'PITCH', 'BENCH', 'MATCH', 'EUROS', 'DRAWS',
+  // Football terms
+  'GOALS', 'PITCH', 'BENCH', 'MATCH', 'DRAWS', 'DERBY', 'TITLE', 'FINAL',
+  'STAGE', 'GROUP', 'ROUND', 'SQUAD', 'TEAMS', 'CARDS', 'FOULS', 'SAVES',
+  'VENUE', 'BLUES', 'EUROS', 'CROSS', 'SHOOT', 'SHOTS', 'BLOCK', 'PRESS',
+  'TOUCH', 'FLICK', 'WINGS', 'CLUBS', 'SCORE', 'KICKS', 'FIELD', 'GRASS',
+  'POSTS', 'CROWD', 'STAND', 'BOOTS', 'SHIRT', 'SOCKS', 'BADGE', 'CREST',
+  'COACH', 'TRAIN', 'FLAGS', 'EXTRA', 'TABLE', 'POINT', 'MEDAL', 'GLORY',
+  'LOANS', 'DEBUT', 'YOUTH', 'PRIDE', 'HEART', 'POWER', 'SPEED', 'SKILL',
+  'FLAIR', 'CLASS', 'STARS', 'SHARP', 'QUICK', 'LOYAL', 'CLEAN', 'SHEET',
+  'WALLS', 'ANGLE', 'PUNCH', 'CATCH', 'GLOVE', 'SWEEP', 'BACKS', 'BREAK',
+  'SPACE', 'SWING', 'SLIDE', 'DIVES', 'AWARD', 'SUPER', 'WOMEN', 'WORLD',
+  'GAMES', 'SEMIS', 'CHEER', 'STRIP', 'UPSET', 'FLANK', 'SHAPE', 'ZONAL',
+  'COVER', 'TEMPO', 'FIGHT', 'SIDES', 'RIVAL', 'THROW', 'ELITE', 'SOLID',
+  'TOUGH', 'BRAVE', 'SMART', 'ALERT', 'FOCUS', 'SHINE', 'MAGIC', 'DREAM',
+  // Clubs and rivals
+  'BARCA', 'SPURS', 'VILLA', 'LIONS', 'KINGS',
+  // Chelsea names (first names, surnames, nicknames)
+  'WALSH', 'JAMES', 'KIRBY', 'ALUKO', 'INGLE', 'HAYES', 'SONIA', 'MAREN',
+  'ANIEK', 'JONNA', 'NIAMH', 'KEIRA', 'AGGIE', 'SANDY', 'MAYRA', 'NAOMI',
+  'GIRMA', 'ELLIE', 'MAIKA', 'WIEKE', 'MAGDA',
 ];
 
 // The classic Wordle answer list (~2,300 common 5-letter words) — used only
@@ -19,6 +39,22 @@ const DICTIONARY = ["cigar","rebut","sissy","humph","awake","blush","focal","eva
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
+const SITE_URL = 'https://panashe77.github.io/chelsea-women-site';
+const SCHEDULE_TIMEOUT_MS = 3000;   // how long to wait for a scheduled word before using the built-in one
+const REVEAL_STEP_MS = 280;         // gap between tiles flipping (keep in step with wordle.css)
+const REVEAL_TOTAL_MS = REVEAL_STEP_MS * (WORD_LENGTH - 1) + 650;
+
+// Category shown above the board. Any word not listed here counts as a football term.
+const DEFAULT_HINT = 'Football term';
+const HINTS = {};
+const addHints = (hint, words) => words.forEach(w => { HINTS[w] = hint; });
+addHints('Club, nickname or ground', ['BARCA', 'SPURS', 'VILLA', 'LIONS', 'KINGS']);
+addHints('A Chelsea surname', ['WALSH', 'JAMES', 'GIRMA']);
+addHints('A Chelsea great’s surname', ['KIRBY', 'ALUKO', 'INGLE', 'HAYES']);
+addHints('A Chelsea first name or nickname', [
+  'SONIA', 'MAREN', 'ANIEK', 'JONNA', 'NIAMH', 'KEIRA', 'AGGIE',
+  'SANDY', 'MAYRA', 'NAOMI', 'ELLIE', 'MAIKA', 'WIEKE', 'MAGDA',
+]);
 
 // Every word in our WORDS list is a valid guess too, even if it's a
 // surname/nickname not in the dictionary above (e.g. WALSH, AGGIE, NIAMH).
@@ -27,15 +63,26 @@ const VALID_GUESSES = new Set([
   ...WORDS.map(w => w.toLowerCase()),
 ]);
 
-// Same puzzle for every visitor on a given calendar day
+// Same puzzle for every visitor on a given calendar day (UTC)
 const EPOCH = new Date('2026-01-01T00:00:00Z');
 const daysSinceEpoch = Math.floor((Date.now() - EPOCH.getTime()) / 86400000);
+const puzzleNumber = daysSinceEpoch + 1;
 const todayKey = new Date().toISOString().slice(0, 10); // e.g. "2026-10-04"
-const TARGET = WORDS[daysSinceEpoch % WORDS.length];
+
+// Stepping by a large prime scrambles the order, but still shows every word
+// exactly once before any word repeats (works while the list has fewer
+// than 7,919 words).
+let TARGET = WORDS[(daysSinceEpoch * 7919) % WORDS.length];
+let hint = HINTS[TARGET] ?? DEFAULT_HINT;
+let isSpecial = false;
 
 const boardEl = document.getElementById('wordle-board');
 const keyboardEl = document.getElementById('wordle-keyboard');
 const messageEl = document.getElementById('wordle-message');
+const hintEl = document.getElementById('wordle-hint');
+const endEl = document.getElementById('wordle-end');
+const shareBtn = document.getElementById('wordle-share');
+const shareStatusEl = document.getElementById('wordle-share-status');
 
 const KEY_ROWS = [
   ['Q','W','E','R','T','Y','U','I','O','P'],
@@ -43,9 +90,46 @@ const KEY_ROWS = [
   ['ENTER','Z','X','C','V','B','N','M','BACK'],
 ];
 
-let guesses = [];      // array of past guess strings
+let guesses = [];          // submitted guesses
 let currentGuess = '';
 let gameOver = false;
+let revealingRow = -1;     // row currently flipping, or -1
+let shakeRow = false;      // current row is shaking after a rejected guess
+let inputLocked = false;   // true while tiles are flipping
+let errorShown = false;    // true while a "Not in word list" style message is up
+
+// ---------- Today's word: a scheduled one from Supabase wins over the built-in one ----------
+async function loadScheduledWord() {
+  try {
+    const request = supabase
+      .from('wordle_words')
+      .select('word, hint, special')
+      .eq('play_date', todayKey)
+      .maybeSingle();
+    const timeout = new Promise(resolve => setTimeout(() => resolve({ timedOut: true }), SCHEDULE_TIMEOUT_MS));
+    const result = await Promise.race([request, timeout]);
+
+    if (!result || result.timedOut || result.error || !result.data) return;
+
+    const word = String(result.data.word || '').toUpperCase();
+    if (!/^[A-Z]{5}$/.test(word)) return;
+
+    TARGET = word;
+    isSpecial = Boolean(result.data.special);
+    hint = result.data.hint || (isSpecial ? '' : DEFAULT_HINT);
+    VALID_GUESSES.add(word.toLowerCase());
+  } catch {
+    // Offline, or the table isn't set up yet: just use the built-in word
+  }
+}
+
+function renderHint() {
+  const text = isSpecial
+    ? (hint ? `⭐ Matchday word: ${hint}` : '⭐ Matchday word')
+    : `Today's category: ${hint}`;
+  hintEl.textContent = text;
+  hintEl.classList.toggle('is-special', isSpecial);
+}
 
 // ---------- Persistence: one play per day ----------
 function loadState() {
@@ -53,7 +137,7 @@ function loadState() {
   if (!saved) return null;
   try {
     const parsed = JSON.parse(saved);
-    return parsed.date === todayKey ? parsed : null;
+    return parsed.date === todayKey && parsed.target === TARGET ? parsed : null;
   } catch {
     return null;
   }
@@ -62,6 +146,7 @@ function loadState() {
 function saveState() {
   localStorage.setItem('chelsea-wordle', JSON.stringify({
     date: todayKey,
+    target: TARGET,
     guesses,
     gameOver,
   }));
@@ -103,23 +188,29 @@ function render() {
   for (let i = 0; i < MAX_GUESSES; i++) {
     const guess = guesses[i] ?? (i === guesses.length ? currentGuess : '');
     const isSubmitted = i < guesses.length;
+    const isRevealing = i === revealingRow;
     const scores = isSubmitted ? scoreGuess(guess) : [];
 
     const tiles = [];
     for (let j = 0; j < WORD_LENGTH; j++) {
       const letter = guess[j] || '';
       const stateClass = isSubmitted ? `tile-${scores[j]}` : (letter ? 'tile-filled' : '');
-      tiles.push(`<div class="wordle-tile ${stateClass}">${letter}</div>`);
+      const flipAttrs = isRevealing ? ` tile-flip" style="--col:${j}` : '';
+      tiles.push(`<div class="wordle-tile ${stateClass}${flipAttrs}">${letter}</div>`);
     }
-    rows.push(`<div class="wordle-row">${tiles.join('')}</div>`);
+    const shake = shakeRow && i === guesses.length ? ' row-shake' : '';
+    rows.push(`<div class="wordle-row${shake}">${tiles.join('')}</div>`);
   }
   boardEl.innerHTML = rows.join('');
   renderKeyboard();
 }
 
 function renderKeyboard() {
+  // While a row is flipping, keep its letters off the keyboard until the reveal finishes
+  const visibleGuesses = guesses.slice(0, revealingRow >= 0 ? revealingRow : guesses.length);
+
   const letterStates = {}; // letter -> best known state
-  guesses.forEach(guess => {
+  visibleGuesses.forEach(guess => {
     const scores = scoreGuess(guess);
     guess.split('').forEach((letter, i) => {
       const state = scores[i];
@@ -133,64 +224,134 @@ function renderKeyboard() {
   keyboardEl.innerHTML = KEY_ROWS.map(row => `
     <div class="wordle-key-row">
       ${row.map(key => {
-        const isSpecial = key === 'ENTER' || key === 'BACK';
+        const isSpecialKey = key === 'ENTER' || key === 'BACK';
         const stateClass = letterStates[key] ? `key-${letterStates[key]}` : '';
         const label = key === 'BACK' ? '⌫' : key;
-        return `<button class="wordle-key ${isSpecial ? 'wordle-key-wide' : ''} ${stateClass}" data-key="${key}">${label}</button>`;
+        return `<button class="wordle-key ${isSpecialKey ? 'wordle-key-wide' : ''} ${stateClass}" data-key="${key}">${label}</button>`;
       }).join('')}
     </div>
   `).join('');
-}
-
-// ---------- Input handling ----------
-function handleKey(key) {
-  if (gameOver) return;
-
-  if (key === 'BACK') {
-    currentGuess = currentGuess.slice(0, -1);
-  } else if (key === 'ENTER') {
-    submitGuess();
-    return;
-  } else if (/^[A-Z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
-    currentGuess += key;
-  }
-  render();
-}
-
-function submitGuess() {
-  if (currentGuess.length !== WORD_LENGTH) {
-    showMessage('Not enough letters');
-    return;
-  }
-
-  if (!VALID_GUESSES.has(currentGuess.toLowerCase())) {
-    showMessage('Not in word list');
-    return;
-  }
-
-  guesses.push(currentGuess);
-  const won = currentGuess === TARGET;
-  currentGuess = '';
-
-  if (won) {
-    gameOver = true;
-    showMessage(`You got it in ${guesses.length}! 🔵`);
-  } else if (guesses.length === MAX_GUESSES) {
-    gameOver = true;
-    showMessage(`Out of guesses — it was ${TARGET}`);
-  } else {
-    showMessage('');
-  }
-
-  saveState();
-  render();
 }
 
 function showMessage(text) {
   messageEl.textContent = text;
 }
 
+// ---------- Input handling ----------
+function handleKey(key) {
+  if (gameOver || inputLocked) return;
+
+  if (key === 'ENTER') {
+    submitGuess();
+    return;
+  }
+
+  if (errorShown) { showMessage(''); errorShown = false; }
+
+  if (key === 'BACK') {
+    currentGuess = currentGuess.slice(0, -1);
+  } else if (/^[A-Z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
+    currentGuess += key;
+  }
+  render();
+}
+
+function reject(message) {
+  showMessage(message);
+  errorShown = true;
+  shakeRow = true;
+  render();
+  setTimeout(() => { shakeRow = false; render(); }, 500);
+}
+
+function submitGuess() {
+  if (currentGuess.length !== WORD_LENGTH) {
+    reject('Not enough letters');
+    return;
+  }
+
+  if (!VALID_GUESSES.has(currentGuess.toLowerCase())) {
+    reject('Not in word list');
+    return;
+  }
+
+  guesses.push(currentGuess);
+  const finished = currentGuess === TARGET || guesses.length === MAX_GUESSES;
+  currentGuess = '';
+  if (finished) gameOver = true;
+  saveState();
+
+  // Flip the new row's tiles one by one, then reveal the result
+  revealingRow = guesses.length - 1;
+  inputLocked = true;
+  errorShown = false;
+  showMessage('');
+  render();
+
+  setTimeout(() => {
+    revealingRow = -1;
+    inputLocked = false;
+    render();
+    if (finished) showEnd();
+  }, REVEAL_TOTAL_MS);
+}
+
+// ---------- End of game ----------
+function showEnd() {
+  const won = guesses[guesses.length - 1] === TARGET;
+  showMessage(won ? `You got it in ${guesses.length}! 🔵` : `Out of guesses. It was ${TARGET}.`);
+  keyboardEl.hidden = true;
+  endEl.hidden = false;
+}
+
+function buildShareText() {
+  const squares = { green: '🟦', yellow: '🟨', gray: '⬜' };
+  const grid = guesses.map(g => scoreGuess(g).map(s => squares[s]).join('')).join('\n');
+  const won = guesses[guesses.length - 1] === TARGET;
+  const score = won ? guesses.length : 'X';
+  return `Chelsea Wordle #${puzzleNumber} ${score}/${MAX_GUESSES}\n\n${grid}\n\n${SITE_URL}/wordle.html`;
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // Older browsers: fall back to a temporary text box
+    try {
+      const box = document.createElement('textarea');
+      box.value = text;
+      document.body.appendChild(box);
+      box.select();
+      const ok = document.execCommand('copy');
+      box.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+shareBtn.addEventListener('click', async () => {
+  const text = buildShareText();
+
+  // On phones, open the share sheet; on desktop, copy to the clipboard
+  if (navigator.share && /Mobi|Android/i.test(navigator.userAgent || '')) {
+    try {
+      await navigator.share({ text });
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;   // they closed the sheet
+    }
+  }
+
+  const copied = await copyToClipboard(text);
+  shareStatusEl.textContent = copied ? 'Copied! Paste it anywhere to share.' : 'Could not copy automatically.';
+  if (!copied) window.prompt('Copy your result:', text);
+});
+
 document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;   // don't swallow shortcuts like Ctrl+R
   const key = e.key.toUpperCase();
   if (key === 'ENTER') handleKey('ENTER');
   else if (key === 'BACKSPACE') handleKey('BACK');
@@ -202,15 +363,21 @@ keyboardEl.addEventListener('click', (e) => {
   if (btn) handleKey(btn.dataset.key);
 });
 
-// ---------- Restore today's progress, if any ----------
-const saved = loadState();
-if (saved) {
-  guesses = saved.guesses;
-  gameOver = saved.gameOver;
-  if (gameOver) {
-    const won = guesses[guesses.length - 1] === TARGET;
-    showMessage(won ? `You got it in ${guesses.length}! 🔵` : `Out of guesses — it was ${TARGET}`);
+// ---------- Start ----------
+async function init() {
+  showMessage('Loading today’s word…');
+  await loadScheduledWord();
+  showMessage('');
+  renderHint();
+
+  const saved = loadState();
+  if (saved) {
+    guesses = saved.guesses;
+    gameOver = saved.gameOver;
   }
+
+  render();
+  if (gameOver) showEnd();
 }
 
-render();
+init();
