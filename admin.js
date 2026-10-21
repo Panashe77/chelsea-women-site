@@ -26,6 +26,9 @@ const tableStatus = document.getElementById('table-status');
 const tablePreviewBtn = document.getElementById('table-preview-btn');
 const tablePreviewArea = document.getElementById('table-preview-area');
 const tableSaveBtn = document.getElementById('table-save-btn');
+const wordleForm = document.getElementById('wordle-form');
+const wordleStatus = document.getElementById('wordle-status');
+const wordleList = document.getElementById('wordle-list');
 
 let fixturesById = {};
 let fixturesLoaded = false;
@@ -112,7 +115,9 @@ tabButtons.forEach(btn => {
     lineupsForm.hidden = tab !== 'lineups';
     goalsForm.hidden = tab !== 'goals';
     tableForm.hidden = tab !== 'table';
-    fixturePicker.hidden = tab === 'table';
+    wordleForm.hidden = tab !== 'wordle';
+    fixturePicker.hidden = tab === 'table' || tab === 'wordle';
+    if (tab === 'wordle') loadWordleSchedule();
   });
 });
 
@@ -347,4 +352,96 @@ tableForm.addEventListener('submit', async (e) => {
   previewRows = [];
   tableForm.table_text.value = '';
   tablePreviewArea.replaceChildren();
+});
+
+// ---------- Wordle: schedule special words ----------
+const utcToday = () => new Date().toISOString().slice(0, 10);
+
+async function loadWordleSchedule() {
+  const { data, error } = await supabase
+    .from('wordle_words')
+    .select('play_date, word, hint, special');
+
+  if (error) {
+    wordleList.textContent = 'Could not load scheduled words: ' + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    wordleList.textContent = 'Nothing scheduled yet.';
+    return;
+  }
+
+  // upcoming (soonest first), then past (most recent first)
+  const today = utcToday();
+  const upcoming = data.filter(r => r.play_date >= today).sort((a, b) => a.play_date.localeCompare(b.play_date));
+  const past = data.filter(r => r.play_date < today).sort((a, b) => b.play_date.localeCompare(a.play_date));
+
+  const table = document.createElement('table');
+  table.className = 'table-preview';
+
+  const head = document.createElement('tr');
+  ['Date', 'Word', 'Hint', 'Type', ''].forEach(t => head.append(cell(t, 'th')));
+  table.append(head);
+
+  [...upcoming, ...past].forEach(r => {
+    const tr = document.createElement('tr');
+    tr.className = r.play_date < today ? '' : (r.play_date === today ? 'row-warn' : 'row-ok');
+
+    [
+      r.play_date === today ? `${r.play_date} (today)` : r.play_date,
+      r.word,
+      r.hint || '',
+      r.special ? 'Matchday special' : 'Scheduled',
+    ].forEach(v => tr.append(cell(v)));
+
+    const actions = document.createElement('td');
+    const del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'level-btn';
+    del.textContent = 'Delete';
+    del.addEventListener('click', () => deleteScheduledWord(r));
+    actions.append(del);
+    tr.append(actions);
+
+    table.append(tr);
+  });
+
+  wordleList.replaceChildren(table);
+}
+
+async function deleteScheduledWord(row) {
+  if (!confirm(`Delete the word ${row.word} scheduled for ${row.play_date}?`)) return;
+
+  const { error } = await supabase.from('wordle_words').delete().eq('play_date', row.play_date);
+  wordleStatus.textContent = error ? 'Error: ' + error.message : `Deleted ${row.word} (${row.play_date}).`;
+  await loadWordleSchedule();
+}
+
+wordleForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const playDate = wordleForm.play_date.value;
+  const word = wordleForm.word.value.trim().toUpperCase();
+  const hint = wordleForm.hint.value.trim();
+  const special = wordleForm.special.checked;
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(playDate)) { wordleStatus.textContent = 'Pick a date.'; return; }
+  if (!/^[A-Z]{5}$/.test(word)) { wordleStatus.textContent = 'The word must be exactly 5 letters (A-Z).'; return; }
+
+  const today = utcToday();
+  if (playDate < today && !confirm('That date has already passed, so no one will ever see this word. Save it anyway?')) return;
+  if (playDate === today && !confirm('That is today. Anyone who already played today will get a fresh puzzle with the new word. Continue?')) return;
+
+  wordleStatus.textContent = 'Saving…';
+  const { error } = await supabase
+    .from('wordle_words')
+    .upsert({ play_date: playDate, word, hint: hint || null, special }, { onConflict: 'play_date' });
+
+  if (error) { wordleStatus.textContent = 'Error: ' + error.message; return; }
+
+  wordleStatus.textContent = `Scheduled ${word} for ${playDate}.`;
+  wordleForm.reset();
+  wordleForm.special.checked = true;
+  await loadWordleSchedule();
 });
