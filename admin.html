@@ -61,6 +61,7 @@
 						<button type="button" class="level-btn is-active" data-tab="lineups">Lineups</button>
 						<button type="button" class="level-btn" data-tab="goals">Goals</button>
 						<button type="button" class="level-btn" data-tab="table">Table</button>
+						<button type="button" class="level-btn" data-tab="wordle">Wordle</button>
 					</div>
 
 					<!-- LINEUPS -->
@@ -127,6 +128,35 @@
 
 						<p class="commentStatus" style="margin-top:1.5rem;">
 							Columns expected after the team name: P, W, D, L, GF, GA, GD (optional), Pts. Extra columns such as form are ignored. Saving updates each team's row in the standings table.
+						</p>
+					</form>
+
+					<!-- WORDLE SCHEDULE -->
+					<form id="wordle-form" data-panel="wordle" hidden>
+						<label class="commentLabel">
+							Date (the day it should appear, UTC)
+							<input type="date" name="play_date" required>
+						</label>
+						<label class="commentLabel">
+							Word (exactly 5 letters, e.g. DERBY)
+							<input type="text" name="word" required maxlength="5" minlength="5" pattern="[A-Za-z]{5}" autocomplete="off" style="text-transform:uppercase;">
+						</label>
+						<label class="commentLabel">
+							Hint shown to players (optional, e.g. "Local rivalry")
+							<input type="text" name="hint" maxlength="80" autocomplete="off">
+						</label>
+						<label style="display:block; margin-bottom:1rem; font-size:.9375rem; color:#4a4a4a;">
+							<input type="checkbox" name="special" checked> Show as a matchday special (gold banner with a star)
+						</label>
+
+						<button type="submit" class="commentButton">Schedule word</button>
+						<p id="wordle-status" class="commentStatus"></p>
+
+						<h2 class="lineup-team" style="margin-top:1.5rem;">Scheduled words</h2>
+						<div id="wordle-list"></div>
+
+						<p class="commentStatus" style="margin-top:1rem;">
+							Visitors can't see a word until its date. A scheduled word replaces the built-in word for that day. Scheduling a word for a different day than today never affects today's players.
 						</p>
 					</form>
 
